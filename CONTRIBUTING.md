@@ -6,8 +6,6 @@
 
 Share with me knowlage
 
-</div>
-
 <img height="200px" src="https://github.com/Kokomichrzan/Pixel-Engine/blob/Info/Assets/Thanks.gif">
 
 # Contributors
@@ -24,16 +22,5 @@ Share with me knowlage
     </table>
   </td>
 </table>
-
-## Main Contributors
-
-<table>
-  <td align=center>
-    none
-  </td>
-</table>
-
-## Contributors Who Helped With Project
-
 
 </div>
