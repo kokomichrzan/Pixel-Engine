@@ -4,19 +4,7 @@
 
 ## How Help in Project
 
-<div align=left>
-
-1. Fork Project
-
-2. Clone Fork
-
-3. Create Branch with propert name of your changes
-
-4. Commit Changes with Description
-
-5. Pull Request Your Fork
-
-6. If I Accept Your Chages I will add your Github Username on bottom of this File
+Share with me knowlage
 
 </div>
 
