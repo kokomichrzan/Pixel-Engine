@@ -7,7 +7,7 @@ PixelEngine::PixelEngine(/* args */)
     GUI UI = GUI(Window);
 
     //Get Assets
-    Data::Vector Assets = Data::Vector("Assets");
+    Data::Vector Models = Data::Vector("Models");
     
     //While Loop
     while(!glfwWindowShouldClose(Window)){
