@@ -6,22 +6,23 @@ namespace GraphicEngine
 
         //Load Settings
         Settings WindowSettings = Settings();
-        Data SettingsData = Data(5, "Settings");
-        if(!SettingsData.Exist()){
-            SettingsData.Add(0, std::to_string(WindowSettings.FullScreen));
-            SettingsData.Add(1, std::to_string(WindowSettings.AutoResolution));
-            SettingsData.Add(2, std::to_string(WindowSettings.Width));
-            SettingsData.Add(3, std::to_string(WindowSettings.Height));
-            SettingsData.Add(4, std::to_string(WindowSettings.RefreshRate));
+        Data::Array SettingsData = Data::Array("Data", 5);
+        SettingsData.Read("Settings");
+        if(!SettingsData.Exist("Settings")){
+            SettingsData.Content[0] = std::to_string(WindowSettings.FullScreen);
+            SettingsData.Content[1] = std::to_string(WindowSettings.AutoResolution);
+            SettingsData.Content[2] = std::to_string(WindowSettings.Width);
+            SettingsData.Content[3] = std::to_string(WindowSettings.Height);
+            SettingsData.Content[4] = std::to_string(WindowSettings.RefreshRate);
 
-            SettingsData.Save();
+            SettingsData.Save("Settings");
 
         }else{
-            WindowSettings.FullScreen = std::stoi(SettingsData.Content[0]);
+            WindowSettings.FullScreen =     std::stoi(SettingsData.Content[0]);
             WindowSettings.AutoResolution = std::stoi(SettingsData.Content[1]);
-            WindowSettings.Width = std::stoi(SettingsData.Content[2]);
-            WindowSettings.Height = std::stoi(SettingsData.Content[3]);
-            WindowSettings.RefreshRate = std::stoi(SettingsData.Content[4]);
+            WindowSettings.Width =          std::stoi(SettingsData.Content[2]);
+            WindowSettings.Height =         std::stoi(SettingsData.Content[3]);
+            WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[4]);
 
         }
 
@@ -45,7 +46,7 @@ namespace GraphicEngine
 
         //Set Resolution
         if(WindowSettings.AutoResolution){
-            WindowSettings.Width = Mode->height;
+            WindowSettings.Width = Mode->width;
             WindowSettings.Height = Mode->height;
         }
 
