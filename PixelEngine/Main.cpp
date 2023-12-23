@@ -1,6 +1,6 @@
-#include <iostream>
+#include "Engine/PixelEngine..h"
 
 int main(){
-    std::cout << "Run";
+    PixelEngine App = PixelEngine();
 
 }
