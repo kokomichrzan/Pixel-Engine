@@ -75,3 +75,47 @@ namespace GraphicEngine
     
 } // namespace Window
 
+//############################## GUI ##############################//
+
+GUI::GUI(GLFWwindow* Window)
+{
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    RefreshRate = &(io.Framerate);
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    //Init IMGUI
+    ImGui_ImplGlfw_InitForOpenGL(Window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+}
+
+void GUI::Render(){
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    //GUI
+    ImGui::Begin("System Info");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / *RefreshRate, *RefreshRate);
+    ImGui::End();
+
+    //Render
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+GUI::~GUI()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
