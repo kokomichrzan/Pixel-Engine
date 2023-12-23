@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <filesystem>
 #include "GraphicEngine.h"
+#include "Scripts.h"
 
 class PixelEngine
 {

@@ -5,6 +5,9 @@ PixelEngine::PixelEngine(/* args */)
     //Create Window / UI
     Window = GraphicEngine::Create(WindowTitle);
     GUI UI = GUI(Window);
+
+    //Get Assets
+    Data::Vector Assets = Data::Vector("Assets");
     
     //While Loop
     while(!glfwWindowShouldClose(Window)){
