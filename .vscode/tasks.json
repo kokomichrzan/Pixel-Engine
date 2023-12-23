@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "Debug",
+			"command": "C:\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"-std=c++20",
+				"-D",
+				"PE_DEBUG",
+				"-I",
+				"${workspaceFolder}\\PixelEngine\\Lib\\Include",
+				"${workspaceFolder}\\PixelEngine\\*.cpp",
+				"${workspaceFolder}\\PixelEngine\\Engine\\*.cpp",
+				"-L",
+				"${workspaceFolder}\\PixelEngine\\Lib\\Lib",
+				"-o",
+				"${workspaceFolder}\\Product\\Debug.exe"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: C:\\mingw64\\bin\\g++.exe"
+		},{
+			"type": "cppbuild",
+			"label": "Release",
+			"command": "C:\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"-std=c++20",
+				"-D",
+				"PE_RELEASE",
+				"-I",
+				"${workspaceFolder}\\PixelEngine\\Lib\\Include",
+				"${workspaceFolder}\\PixelEngine\\*.cpp",
+				"${workspaceFolder}\\PixelEngine\\Engine\\*.cpp",
+				"-L",
+				"${workspaceFolder}\\PixelEngine\\Lib\\Lib",
+				"-mwindows",
+				"-o",
+				"${workspaceFolder}\\Product\\Release.exe"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: C:\\mingw64\\bin\\g++.exe"
+		}
+	]
+}
