@@ -8,6 +8,8 @@ PixelEngine::PixelEngine(/* args */)
 
     //Get Assets
     Data::Vector Models = Data::Vector("Models");
+    Data::Vector Textures = Data::Vector("Textures");
+    Data::Vector Materials = Data::Vector("Materials");
     
     //While Loop
     while(!glfwWindowShouldClose(Window)){
