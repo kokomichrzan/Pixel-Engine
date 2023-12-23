@@ -7,7 +7,7 @@ This is my Pixel Game Engine created only by me for my portfolio. I will learn w
 
 <h2>📃Usage📃</h2>
 
-[Check Docs](https://kokomichrzan.github.io/Pixel-Engine/)
+[Check Docs](https://kokomichrzan.github.io/Pixel-Engine/Docs)
 
 <h2>✨Contributors✨</h2>
 <table align=center>
