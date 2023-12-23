@@ -6,9 +6,8 @@
 This is my Pixel Game Engine created only by me for my portfolio. I will learn with this Engine how opengl and 3d graphic works. Especially how Shader works, Materials, Models, Noramls, Aniamtion, Procedural Animation, How generate Game, And how whole Game Engines work.
 
 <h2>📃Usage📃</h2>
-Just Download And Create Game
 
-[Download](https://github.com/kokomichrzan/Pixel-Engine/releases)
+[Check Docs](https://kokomichrzan.github.io/Pixel-Engine/)
 
 <h2>✨Contributors✨</h2>
 <table align=center>
