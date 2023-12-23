@@ -1,6 +1,6 @@
 #include "GraphicEngine.h"
 
-namespace Window
+namespace GraphicEngine
 {
     GLFWwindow* Create(const std::string WindowTitle){
 
@@ -36,8 +36,8 @@ namespace Window
         else glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate);
         
         // //Set Hints
-        glfwWindowHint(GLFW_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         //Set Window Settings
@@ -55,13 +55,19 @@ namespace Window
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
         else
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
-
+        if(!Window){
+            LOG("Window is not created");
+        }
         
+        //Set Window Position
         glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2);
+
+        //Set Context
+        glfwMakeContextCurrent(Window);
 
         //Set Glad
         gladLoadGL();
-        glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
+        glad_glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
         
         //Return Window
         return Window;

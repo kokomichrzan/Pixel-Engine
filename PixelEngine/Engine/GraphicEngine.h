@@ -3,9 +3,10 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "Scripts.h"
+#include "../Macro.h"
 
 //############################## Window ##############################//
-namespace Window
+namespace GraphicEngine
 {
     GLFWwindow* Create(const std::string WindowTitle);
 
