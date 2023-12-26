@@ -137,6 +137,8 @@ void GUI::Render(){
     ImGui::SetWindowPos(ImVec2(0,0));
     ImGui::SetWindowSize(ImVec2(Width, 30));
     if(ImGui::Button("Add",ImVec2(30, 30))) {Add();};
+    ImGui::SetCursorPos(ImVec2(Width-40, 0));
+    if(ImGui::Button("Exit", ImVec2(40, 30))) {WindowShouldClose = true; Log.MESSAGE("WindowShouldClose " + WindowShouldClose);};
     ImGui::End();
     ImGui::PopStyleColor();
 
@@ -161,6 +163,7 @@ void GUI::Render(){
 GUI::~GUI()
 {
     for(int Count = 0; Count < Windows.size(); Count++){
+        Log.INFO("Removed Window " + Count);
         delete Windows[Count];
     }
 

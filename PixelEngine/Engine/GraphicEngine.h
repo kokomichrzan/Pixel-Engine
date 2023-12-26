@@ -52,10 +52,11 @@ private:
     GLFWwindow* Window;
     int Width, Height;
     bool Dockspace = true;
-
     std::vector< Elements* > Windows;
-
     void Add();
+
+public:
+    bool WindowShouldClose = false;
 
 //Functions
 public:

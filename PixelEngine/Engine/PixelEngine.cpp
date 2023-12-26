@@ -12,7 +12,7 @@ PixelEngine::PixelEngine(/* args */)
     Data::Vector Materials = Data::Vector("Materials"); Log.MESSAGE("Opened Materials Dir");
     
     //While Loop
-    while(!glfwWindowShouldClose(Window)){
+    while(!(glfwWindowShouldClose(Window) || UI.WindowShouldClose)){
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(.04f, 0.18f, 0.27f, 1.0f);
 
