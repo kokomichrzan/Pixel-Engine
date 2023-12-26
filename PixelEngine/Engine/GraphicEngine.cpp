@@ -113,6 +113,19 @@ GUI::GUI(GLFWwindow* GetWindow)
     ImGui_ImplOpenGL3_Init("#version 330");
     Log.INFO("Init Glad and GLFW for ImGUi");
 
+    Data::Vector GuiLoad = Data::Vector("Settings");
+    GuiLoad.Read("Gui");
+
+    for(int Count = 0; Count < GuiLoad.Content.size() - 1; Count += 2){
+        Elements* Element = new Elements(std::stoi(GuiLoad.Content[Count]));
+        Element->Type = std::stoi(GuiLoad.Content[Count + 1]);
+        Windows.push_back(Element);
+
+    }
+
+   
+    Log.INFO("GUI Loaded");
+
 }
 
 void GUI::Render(){
@@ -162,10 +175,17 @@ void GUI::Render(){
 
 GUI::~GUI()
 {
+    Data::Vector GuiSave = Data::Vector("Settings");
+
     for(int Count = 0; Count < Windows.size(); Count++){
+        GuiSave.Add(std::to_string(Windows[Count]->ID));
+        GuiSave.Add(std::to_string(Windows[Count]->Type));
         Log.INFO("Removed Window " + Count);
         delete Windows[Count];
     }
+
+    GuiSave.Save("Gui");
+    Log.INFO("GUI Saved");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

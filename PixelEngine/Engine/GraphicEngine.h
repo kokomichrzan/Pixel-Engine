@@ -38,7 +38,7 @@ class GUI
 
 private:
     struct Elements{
-        private:
+        public:
             int Type = 0;
             int ID = 0;
         public:
