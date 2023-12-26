@@ -26,9 +26,6 @@ PixelEngine::PixelEngine()
         if(Height < 400) Height = 400;
         glfwSetWindowSize(Window, Width, Height); 
 
-        //Log Change Res
-        if(WidthBefore != Width || HeightBefore != Height) Log.INFO("Resolution Changed to " + std::to_string(Width) + " x " + std::to_string(Height));
-
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);
