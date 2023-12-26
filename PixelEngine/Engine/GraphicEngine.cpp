@@ -212,11 +212,13 @@ GUI::~GUI()
 
 void GUI::CreateNewSubWindow(){
     //Create Unique ID
-    int IDW = rand();
+    int IDW;
     bool Findet = false;
-    while (!Findet && SubWindow.size())
+    while (!Findet)
     {
         IDW = rand();
+        if(!SubWindow.size()) Findet = true;
+
         //Chack if IDW is used
         for(int Count = 0; Count < SubWindow.size(); Count++)
         {
