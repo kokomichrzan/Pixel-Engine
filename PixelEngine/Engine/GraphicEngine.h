@@ -61,6 +61,7 @@ private:
     //############################## GUI Events ##############################//
 
     void CreateNewSubWindow();
+    void DeleteSubWindow(const int& ID);
 
 public:
     bool WindowShouldClose = false;

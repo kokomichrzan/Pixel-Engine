@@ -168,7 +168,8 @@ void GUI::Render(){
 
     //Load Sub Windows
     for(int Count = 0; Count < SubWindow.size(); Count++){
-        SubWindow[Count]->Render();
+        if(SubWindow[Count]->RenderElement)SubWindow[Count]->Render();
+        else DeleteSubWindow(Count);
     }
 
     ImGui::End();
@@ -210,9 +211,30 @@ GUI::~GUI()
 //############################## GUI Events ##############################//
 
 void GUI::CreateNewSubWindow(){
-    Element* NewWindow = new Element(SubWindow.size());
+    //Create Unique ID
+    int IDW = rand();
+    bool Findet = false;
+    while (!Findet && SubWindow.size())
+    {
+        IDW = rand();
+        //Chack if IDW is used
+        for(int Count = 0; Count < SubWindow.size(); Count++)
+        {
+            Findet = true;
+            if(SubWindow[Count]->ID == IDW) Findet = false;
+        }
+    }
+    
+    //Create New Window
+    Element* NewWindow = new Element(IDW);
     SubWindow.push_back(NewWindow);
     Log.MESSAGE("Created New Window");
+}
+
+void GUI::DeleteSubWindow(const int& ID){
+    delete SubWindow[ID];
+    SubWindow.erase(std::next(SubWindow.begin(), ID));
+    Log.MESSAGE("Removed Sub Window");
 }
 
 //############################## Elements ##############################//
@@ -228,6 +250,10 @@ void Element::Render(){
     
     //Title Bar
     if(ImGui::BeginMenu("Type")){
+        if(ImGui::MenuItem("None"))
+        {
+            Type = 0;
+        }
         if(ImGui::MenuItem("LOG"))
         {
             Type = 1;
@@ -235,7 +261,7 @@ void Element::Render(){
     ImGui::EndMenu();
     }
     if(ImGui::MenuItem("Exit")){
-        
+        RenderElement = false;
     }
     
     //Render Window Type
