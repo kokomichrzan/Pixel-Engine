@@ -32,12 +32,13 @@ PixelEngine::~PixelEngine()
 {
     int Width, Height;
     glfwGetWindowSize(Window, &Width, &Height);
-    Data::Array WindowSettings = Data::Array("Data", 5);
-    WindowSettings.Read("Settings");
+    Data::Array WindowSettings = Data::Array("Settings", 5);
+    WindowSettings.Read("Window");
     WindowSettings.Content[2] = std::to_string(Width);
     WindowSettings.Content[3] = std::to_string(Height);
-    WindowSettings.Save("Settings");
+    WindowSettings.Save("Window");
     Log.MESSAGE("Window Size Saved");
     glfwDestroyWindow(Window);
     glfwTerminate();
+    
 }

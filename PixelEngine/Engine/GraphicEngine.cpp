@@ -8,16 +8,16 @@ namespace GraphicEngine
 
         //Load Settings
         Settings WindowSettings = Settings();
-        Data::Array SettingsData = Data::Array("Data", 5);
-        SettingsData.Read("Settings");
-        if(!SettingsData.Exist("Settings")){
+        Data::Array SettingsData = Data::Array("Settings", 5);
+        SettingsData.Read("Window");
+        if(!SettingsData.Exist("Window")){
             SettingsData.Content[0] = std::to_string(WindowSettings.FullScreen);
             SettingsData.Content[1] = std::to_string(WindowSettings.AutoResolution);
             SettingsData.Content[2] = std::to_string(WindowSettings.Width);
             SettingsData.Content[3] = std::to_string(WindowSettings.Height);
             SettingsData.Content[4] = std::to_string(WindowSettings.RefreshRate);
 
-            SettingsData.Save("Settings");
+            SettingsData.Save("Window");
             Log.INFO("Create Window Settings");
 
         }else{
