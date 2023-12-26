@@ -109,17 +109,17 @@ void GUI::Render(){
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
     ImGui::Begin("Dockspace Window", &Dockspace, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
-    ImGui::SetWindowPos(ImVec2(0,50));
+    ImGui::SetWindowPos(ImVec2(0,30));
     glfwGetWindowSize(Window, &Width, &Height);
-    ImGui::SetWindowSize(ImVec2(Width, Height - 50));
+    ImGui::SetWindowSize(ImVec2(Width, Height - 30));
 
     ImGuiID DockspaceID = ImGui::GetID("Dockspace");
     ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
 
     ImGui::Begin("TopBar", &Dockspace, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::SetWindowPos(ImVec2(0,0));
-    ImGui::SetWindowSize(ImVec2(Width, 50));
-    if(ImGui::Button("Add",ImVec2(50, 50))) {Add();};
+    ImGui::SetWindowSize(ImVec2(Width, 30));
+    if(ImGui::Button("Add",ImVec2(30, 30))) {Add();};
     ImGui::End();
 
     for(int Count = 0; Count < Windows.size(); Count++){
