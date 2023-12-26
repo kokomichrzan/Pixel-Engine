@@ -1,5 +1,5 @@
 #pragma once
-//GLAD / GLFW
+//LIBs
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -10,14 +10,13 @@
 #include <ImGui/imgui_impl_opengl3.h>
 //Programs
 #include "Scripts.h"
-#include "../Macro.h"
 #include "LOG.h"
 
 //############################## Window ##############################//
 
 namespace GraphicEngine
 {
-    GLFWwindow* Create(const std::string WindowTitle);
+    GLFWwindow* Create(const std::string& WindowTitle);
     
     //Settings
     struct Settings{
@@ -30,30 +29,32 @@ namespace GraphicEngine
 
 };
 
+//############################## Element ##############################//
+
+class Element{
+    public:
+        int Type = 0;
+        int ID = 0;
+    public:
+        Element(const int& GetID, int GetType = 0);
+        void Render();
+
+};
+
 //############################## GUI ##############################//
 
 class GUI
 {
-//############################## Elements ##############################//
-
-private:
-    struct Elements{
-        public:
-            int Type = 0;
-            int ID = 0;
-        public:
-            Elements(int GetID);
-            void Render();
-
-    };
-
 //Varibles
 private:
     GLFWwindow* Window;
     int Width, Height;
     bool Dockspace = true;
-    std::vector< Elements* > Windows;
-    void Add();
+    std::vector<Element*> SubWindow;
+
+    //############################## GUI Events ##############################//
+    
+    void CreateNewSubWindow();
 
 public:
     bool WindowShouldClose = false;
@@ -65,4 +66,3 @@ public:
     ~GUI();
 
 };
-

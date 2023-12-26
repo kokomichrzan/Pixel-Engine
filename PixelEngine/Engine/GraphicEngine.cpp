@@ -4,7 +4,7 @@ LOG Log = LOG();
 
 namespace GraphicEngine
 {
-    GLFWwindow* Create(const std::string WindowTitle){
+    GLFWwindow* Create(const std::string& WindowTitle){
 
         //Load Settings
         Settings WindowSettings = Settings();
@@ -34,6 +34,7 @@ namespace GraphicEngine
         glfwInit();
         Log.INFO("GLFW Initialized");
 
+        //Get Window Params
         GLFWmonitor* Monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
 
@@ -41,8 +42,7 @@ namespace GraphicEngine
         if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); Log.INFO("Setted Refresh Rate to " + Mode->refreshRate);}
         else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); Log.INFO("Setted Refresh Rate to " + WindowSettings.RefreshRate);}
         
-        
-        // //Set Hints
+        //Set Hints
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -62,11 +62,17 @@ namespace GraphicEngine
         //Create Window
         GLFWwindow* Window;
         if(WindowSettings.FullScreen)
-        {Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
-        Log.INFO("Create Full Screen Window");}
+        {
+            Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
+            Log.INFO("Create Full Screen Window");
+        }
         else
-        {Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
-        Log.INFO("Create Window");}
+        {
+            Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
+            Log.INFO("Create Window");
+        }
+
+        //Check If Window Created
         if(!Window){
             Log.WARNING("Can not Create Window");
         }
@@ -93,6 +99,7 @@ namespace GraphicEngine
 
 GUI::GUI(GLFWwindow* GetWindow)
 {
+    //Get Window Ptr
     Window = GetWindow;
 
     // Setup Dear ImGui context
@@ -113,17 +120,13 @@ GUI::GUI(GLFWwindow* GetWindow)
     ImGui_ImplOpenGL3_Init("#version 330");
     Log.INFO("Init Glad and GLFW for ImGUi");
 
+    //Load SubWindows
     Data::Vector GuiLoad = Data::Vector("Settings");
     GuiLoad.Read("Gui");
-
     for(int Count = 0; Count < GuiLoad.Content.size() - 1; Count += 2){
-        Elements* Element = new Elements(std::stoi(GuiLoad.Content[Count]));
-        Element->Type = std::stoi(GuiLoad.Content[Count + 1]);
-        Windows.push_back(Element);
-
+        Element* LoadSubWindow = new Element(std::stoi(GuiLoad.Content[Count]), std::stoi(GuiLoad.Content[Count + 1]));
+        SubWindow.push_back(LoadSubWindow);
     }
-
-   
     Log.INFO("GUI Loaded");
 
 }
@@ -134,39 +137,49 @@ void GUI::Render(){
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    //GUI
+    //Set Dockspace Style
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
+
+    //Create Dockspace
     ImGui::Begin("Dockspace Window", &Dockspace, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
     ImGui::SetWindowPos(ImVec2(0,30));
     glfwGetWindowSize(Window, &Width, &Height);
     ImGui::SetWindowSize(ImVec2(Width, Height - 30));
-
     ImGuiID DockspaceID = ImGui::GetID("Dockspace");
     ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
 
+    //Style TopBar
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.12,0.23,0.23,1.0));
+
+    //Create TopBar
     ImGui::Begin("TopBar", &Dockspace, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-    ImGui::SetWindowPos(ImVec2(0,0));
-    ImGui::SetWindowSize(ImVec2(Width, 30));
-    if(ImGui::Button("Add",ImVec2(30, 30))) {Add();};
-    ImGui::SetCursorPos(ImVec2(Width-30, 0));
-    if(ImGui::Button("X", ImVec2(30, 30))) {WindowShouldClose = true; Log.MESSAGE("WindowShouldClose " + WindowShouldClose);};
+        ImGui::SetWindowPos(ImVec2(0,0));
+        ImGui::SetWindowSize(ImVec2(Width, 30));
+        //Create Add Sub Window BTN
+        if(ImGui::Button("Add",ImVec2(30, 30))) {CreateNewSubWindow();};
+        //Create Exit BTN
+        ImGui::SetCursorPos(ImVec2(Width-30, 0));
+        if(ImGui::Button("X", ImVec2(30, 30))) {WindowShouldClose = true; Log.MESSAGE("WindowShouldClose " + WindowShouldClose);};
     ImGui::End();
+
+    //Pop TopBar Style
     ImGui::PopStyleColor();
 
-    for(int Count = 0; Count < Windows.size(); Count++){
-        Windows[Count]->Render();
+    //Load Sub Windows
+    for(int Count = 0; Count < SubWindow.size(); Count++){
+        SubWindow[Count]->Render();
     }
 
     ImGui::End();
+
+    //Pop Dockspace Style
     ImGui::PopStyleColor();
     ImGui::PopStyleVar();
 
     //Render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
     GLFWwindow* backup_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
@@ -175,37 +188,43 @@ void GUI::Render(){
 
 GUI::~GUI()
 {
+    //Save And Delete Sub Windows
     Data::Vector GuiSave = Data::Vector("Settings");
-
-    for(int Count = 0; Count < Windows.size(); Count++){
-        GuiSave.Add(std::to_string(Windows[Count]->ID));
-        GuiSave.Add(std::to_string(Windows[Count]->Type));
+    for(int Count = 0; Count < SubWindow.size(); Count++){
+        GuiSave.Add(std::to_string(SubWindow[Count]->ID));
+        GuiSave.Add(std::to_string(SubWindow[Count]->Type));
         Log.INFO("Removed Window " + Count);
-        delete Windows[Count];
-    }
 
+        //Delete Sub Window
+        delete SubWindow[Count];
+    }
     GuiSave.Save("Gui");
     Log.INFO("GUI Saved");
 
+    //Shut Down ImGui
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void GUI::Add(){
-    Elements* Element = new Elements(Windows.size());
-    Windows.push_back(Element);
-    Log.MESSAGE("Created New Window");
-}
+//############################## GUI Events ##############################//
 
-GUI::Elements::Elements(int GetID){
-    ID = GetID;
+void GUI::CreateNewSubWindow(){
+    Element* NewWindow = new Element(SubWindow.size());
+    SubWindow.push_back(NewWindow);
+    Log.MESSAGE("Created New Window");
 }
 
 //############################## Elements ##############################//
 
-void GUI::Elements::Render(){
+Element::Element(const int& GetID, int GetType){
+    ID = GetID;
+    Type = GetType;
+}
+
+void Element::Render(){
+    //Create Sub Window
     ImGui::Begin(("Window " + std::to_string(ID)).c_str());
-    ImGui::Text(Log.GETLOG().c_str());
+        ImGui::Text(Log.GetLog().c_str());
     ImGui::End();
 }

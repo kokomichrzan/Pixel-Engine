@@ -1,17 +1,15 @@
 #include "LOG.h"
 
-void LOG::WARNING(std::string Value){
+void LOG::WARNING(const std::string& Value){
     LOGDATA += "[WARNING] " + Value + "\n";
 }
 
-void LOG::INFO(std::string Value){
+void LOG::INFO(const std::string& Value){
     LOGDATA += "[INFO] " + Value + "\n";
 }
 
-void LOG::MESSAGE(std::string Value){
+void LOG::MESSAGE(const std::string& Value){
     LOGDATA += "[MESSAGE] " + Value + "\n";
 }
 
-std::string LOG::GETLOG(){
-    return LOGDATA;
-}
+std::string LOG::GetLog() { return LOGDATA; };
