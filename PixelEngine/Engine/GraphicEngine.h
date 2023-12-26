@@ -3,6 +3,7 @@
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
+#include <vector>
 //IMGUI
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
@@ -12,7 +13,7 @@
 #include "../Macro.h"
 
 //############################## Window ##############################//
-//############################## Window ##############################//
+
 namespace GraphicEngine
 {
     GLFWwindow* Create(const std::string WindowTitle);
@@ -32,13 +33,34 @@ namespace GraphicEngine
 
 class GUI
 {
+//############################## Elements ##############################//
+
+private:
+    struct Elements{
+        private:
+            int Type = 0;
+            int ID = 0;
+        public:
+            Elements(int GetID);
+            void Render();
+
+    };
+
 //Varibles
 private:
-    float* RefreshRate;
+    GLFWwindow* Window;
+    int Width, Height;
+    bool Dockspace = true;
+
+    std::vector< Elements* > Windows;
+
+    void Add();
+
 //Functions
 public:
-    GUI(GLFWwindow* Window);
+    GUI(GLFWwindow* GetWindow);
     void Render();
     ~GUI();
+
 };
 

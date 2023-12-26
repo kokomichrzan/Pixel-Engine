@@ -42,7 +42,7 @@ namespace GraphicEngine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         //Set Window Settings
-        glfwWindowHint(GLFW_DECORATED, false);
+        // glfwWindowHint(GLFW_DECORATED, false);
 
         //Set Resolution
         if(WindowSettings.AutoResolution){
@@ -78,16 +78,17 @@ namespace GraphicEngine
 
 //############################## GUI ##############################//
 
-GUI::GUI(GLFWwindow* Window)
+GUI::GUI(GLFWwindow* GetWindow)
 {
+    Window = GetWindow;
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    RefreshRate = &(io.Framerate);
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -105,18 +106,64 @@ void GUI::Render(){
     ImGui::NewFrame();
 
     //GUI
-    ImGui::Begin("System Info");
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / *RefreshRate, *RefreshRate);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
+    ImGui::Begin("Dockspace Window", &Dockspace, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
+    ImGui::SetWindowPos(ImVec2(0,50));
+    glfwGetWindowSize(Window, &Width, &Height);
+    ImGui::SetWindowSize(ImVec2(Width, Height - 50));
+
+    ImGuiID DockspaceID = ImGui::GetID("Dockspace");
+    ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
+
+    ImGui::Begin("TopBar", &Dockspace, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::SetWindowPos(ImVec2(0,0));
+    ImGui::SetWindowSize(ImVec2(Width, 50));
+    if(ImGui::Button("Add",ImVec2(50, 50))) {Add();};
     ImGui::End();
+
+    for(int Count = 0; Count < Windows.size(); Count++){
+        Windows[Count]->Render();
+    }
+
+    ImGui::End();
+    ImGui::PopStyleColor();
+    ImGui::PopStyleVar();
 
     //Render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    GLFWwindow* backup_current_context = glfwGetCurrentContext();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    glfwMakeContextCurrent(backup_current_context);
 }
 
 GUI::~GUI()
 {
+    for(int Count = 0; Count < Windows.size(); Count++){
+        delete Windows[Count];
+    }
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+void GUI::Add(){
+    Elements* Element = new Elements(Windows.size());
+    Windows.push_back(Element);
+}
+
+GUI::Elements::Elements(int GetID){
+    ID = GetID;
+}
+
+//############################## Elements ##############################//
+
+void GUI::Elements::Render(){
+    ImGui::Begin(std::to_string(ID).c_str());
+    ImGui::Text("Window Text");
+    ImGui::End();
 }

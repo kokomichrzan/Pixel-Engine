@@ -14,11 +14,15 @@ PixelEngine::PixelEngine(/* args */)
     //While Loop
     while(!glfwWindowShouldClose(Window)){
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(0.04f, 0.18f, 0.27f, 1.0f);
-
-
+        glClearColor(1.04f, 0.18f, 0.27f, 1.0f);
 
         UI.Render();
+
+        int Width, Height;
+        glfwGetWindowSize(Window, &Width, &Height);
+        if(Width < 600) Width = 600;
+        if(Height < 400) Height = 400;
+        glfwSetWindowSize(Window, Width, Height); 
         glfwPollEvents();
         glfwSwapBuffers(Window);
     }
