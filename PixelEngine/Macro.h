@@ -5,7 +5,7 @@
 #ifdef PE_DEBUG
 #include <iostream>
 
-#define LOG(x) std::cout << x << std::endl
+#define LOGMacro(x) std::cout << x << std::endl
 
 
 #endif
@@ -14,6 +14,6 @@
 
 #ifdef PE_RELEASE
 
-#define LOG(x) 
+#define LOGMacro(x) 
 
 #endif

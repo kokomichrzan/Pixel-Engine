@@ -1,5 +1,7 @@
 #include "GraphicEngine.h"
 
+LOG Log = LOG();
+
 namespace GraphicEngine
 {
     GLFWwindow* Create(const std::string WindowTitle){
@@ -16,6 +18,7 @@ namespace GraphicEngine
             SettingsData.Content[4] = std::to_string(WindowSettings.RefreshRate);
 
             SettingsData.Save("Settings");
+            Log.INFO("Create Window Settings");
 
         }else{
             WindowSettings.FullScreen =     std::stoi(SettingsData.Content[0]);
@@ -24,44 +27,53 @@ namespace GraphicEngine
             WindowSettings.Height =         std::stoi(SettingsData.Content[3]);
             WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[4]);
 
+            Log.INFO("Loaded Window Settings");
         }
 
         //Init Window
         glfwInit();
+        Log.INFO("GLFW Initialized");
 
         GLFWmonitor* Monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
 
         //Refresh Rate
-        if(WindowSettings.RefreshRate == 0) glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate);
-        else glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate);
+        if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); Log.INFO("Setted Refresh Rate to " + Mode->refreshRate);}
+        else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); Log.INFO("Setted Refresh Rate to " + WindowSettings.RefreshRate);}
+        
         
         // //Set Hints
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        Log.INFO("Seted Window Glad Hints");
 
         //Set Window Settings
-        // glfwWindowHint(GLFW_DECORATED, false);
+        glfwWindowHint(GLFW_DECORATED, false);
+        Log.INFO("Removed Top Bar");
 
         //Set Resolution
         if(WindowSettings.AutoResolution){
             WindowSettings.Width = Mode->width;
             WindowSettings.Height = Mode->height;
         }
+        Log.INFO("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
 
         //Create Window
         GLFWwindow* Window;
         if(WindowSettings.FullScreen)
-        Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
+        {Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
+        Log.INFO("Create Full Screen Window");}
         else
-        Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
+        {Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
+        Log.INFO("Create Window");}
         if(!Window){
-            LOG("Window is not created");
+            Log.WARNING("Can not Create Window");
         }
         
         //Set Window Position
         glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2);
+        Log.INFO("Center The Window");
 
         //Set Context
         glfwMakeContextCurrent(Window);
@@ -69,6 +81,7 @@ namespace GraphicEngine
         //Set Glad
         gladLoadGL();
         glad_glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
+        Log.INFO("Loaded GLAD");
         
         //Return Window
         return Window;
@@ -89,13 +102,16 @@ GUI::GUI(GLFWwindow* GetWindow)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    Log.INFO("Loaded ImGui Flags");
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    Log.INFO("Set ImGui Style");
 
     //Init IMGUI
     ImGui_ImplGlfw_InitForOpenGL(Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+    Log.INFO("Init Glad and GLFW for ImGUi");
 
 }
 
@@ -156,6 +172,7 @@ GUI::~GUI()
 void GUI::Add(){
     Elements* Element = new Elements(Windows.size());
     Windows.push_back(Element);
+    Log.MESSAGE("Created New Window");
 }
 
 GUI::Elements::Elements(int GetID){
@@ -165,7 +182,7 @@ GUI::Elements::Elements(int GetID){
 //############################## Elements ##############################//
 
 void GUI::Elements::Render(){
-    ImGui::Begin(std::to_string(ID).c_str());
-    ImGui::Text("Window Text");
+    ImGui::Begin(("Window " + std::to_string(ID)).c_str());
+    ImGui::Text(Log.GETLOG().c_str());
     ImGui::End();
 }

@@ -11,13 +11,14 @@
 //Programs
 #include "Scripts.h"
 #include "../Macro.h"
+#include "LOG.h"
 
 //############################## Window ##############################//
 
 namespace GraphicEngine
 {
     GLFWwindow* Create(const std::string WindowTitle);
-
+    
     //Settings
     struct Settings{
         int Width = 1000,
