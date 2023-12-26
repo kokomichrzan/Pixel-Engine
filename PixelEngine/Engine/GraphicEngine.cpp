@@ -271,7 +271,6 @@ void Element::Render(){
     {
         case 0: break; //Clear Window
         case 1: LOG(); break; //LOG Window
-    
 
     }
     ImGui::End();
