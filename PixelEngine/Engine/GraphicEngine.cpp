@@ -116,11 +116,13 @@ void GUI::Render(){
     ImGuiID DockspaceID = ImGui::GetID("Dockspace");
     ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
 
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.12,0.23,0.23,1.0));
     ImGui::Begin("TopBar", &Dockspace, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::SetWindowPos(ImVec2(0,0));
     ImGui::SetWindowSize(ImVec2(Width, 30));
     if(ImGui::Button("Add",ImVec2(30, 30))) {Add();};
     ImGui::End();
+    ImGui::PopStyleColor();
 
     for(int Count = 0; Count < Windows.size(); Count++){
         Windows[Count]->Render();
