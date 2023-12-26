@@ -247,25 +247,31 @@ Element::Element(const int& GetID, int GetType){
 }
 
 void Element::Render(){
+    //Set Style
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
+
     //Start Window
-    ImGui::Begin(("Window " + std::to_string(ID)).c_str());
+    ImGui::Begin(("Window " + std::to_string(ID)).c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
     
     //Title Bar
-    if(ImGui::BeginMenu("Type")){
-        if(ImGui::MenuItem("None"))
-        {
-            Type = 0;
+    ImGui::BeginMenuBar();
+        if(ImGui::BeginMenu("Type")){
+            if(ImGui::MenuItem("None"))
+            {
+                Type = 0;
+            }
+            if(ImGui::MenuItem("LOG"))
+            {
+                Type = 1;
+            }
+        ImGui::EndMenu();
         }
-        if(ImGui::MenuItem("LOG"))
-        {
-            Type = 1;
+        if(ImGui::MenuItem("Exit")){
+            RenderElement = false;
         }
-    ImGui::EndMenu();
-    }
-    if(ImGui::MenuItem("Exit")){
-        RenderElement = false;
-    }
-    
+
+    ImGui::EndMenuBar();
+
     //Render Window Type
     switch (Type)
     {
@@ -274,11 +280,11 @@ void Element::Render(){
 
     }
     ImGui::End();
+    ImGui::PopStyleColor();
 }
 
 void Element::LOG(){
     //Render Log
-    ImGui::SetCursorPos(ImVec2(0, 30));
     ImGui::Text(Log.GetLog().c_str());
 
 }
