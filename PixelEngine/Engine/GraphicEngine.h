@@ -32,12 +32,18 @@ namespace GraphicEngine
 //############################## Element ##############################//
 
 class Element{
-    public:
-        int Type = 0;
-        int ID = 0;
-    public:
-        Element(const int& GetID, int GetType = 0);
-        void Render();
+public:
+    int Type = 0;
+    int ID = 0;
+    bool RenderElement = true;
+
+public:
+    Element(const int& GetID, int GetType = 0);
+    void Render();
+
+//############################## Render Type ##############################//
+private:
+    void LOG();
 
 };
 
@@ -53,7 +59,7 @@ private:
     std::vector<Element*> SubWindow;
 
     //############################## GUI Events ##############################//
-    
+
     void CreateNewSubWindow();
 
 public:

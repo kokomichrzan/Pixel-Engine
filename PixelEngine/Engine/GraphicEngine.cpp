@@ -223,8 +223,35 @@ Element::Element(const int& GetID, int GetType){
 }
 
 void Element::Render(){
-    //Create Sub Window
+    //Start Window
     ImGui::Begin(("Window " + std::to_string(ID)).c_str());
-        ImGui::Text(Log.GetLog().c_str());
+    
+    //Title Bar
+    if(ImGui::BeginMenu("Type")){
+        if(ImGui::MenuItem("LOG"))
+        {
+            Type = 1;
+        }
+    ImGui::EndMenu();
+    }
+    if(ImGui::MenuItem("Exit")){
+        
+    }
+    
+    //Render Window Type
+    switch (Type)
+    {
+        case 0: break; //Clear Window
+        case 1: LOG(); break; //LOG Window
+    
+
+    }
     ImGui::End();
+}
+
+void Element::LOG(){
+    //Render Log
+    ImGui::SetCursorPos(ImVec2(0, 30));
+    ImGui::Text(Log.GetLog().c_str());
+
 }
