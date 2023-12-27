@@ -44,6 +44,7 @@ public:
 //############################## Render Type ##############################//
 private:
     void LOG();
+    void Assets();
 
 };
 
@@ -55,12 +56,11 @@ class GUI
 private:
     GLFWwindow* Window;
     int Width, Height;
-    bool Dockspace = true;
     std::vector<Element*> SubWindow;
 
     //############################## GUI Events ##############################//
 
-    void CreateNewSubWindow();
+    void CreateNewSubWindow(const int& Type = 0);
     void DeleteSubWindow(const int& ID);
 
 public:

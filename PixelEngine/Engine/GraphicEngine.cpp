@@ -142,28 +142,65 @@ void GUI::Render(){
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
 
     //Create Dockspace
-    ImGui::Begin("Dockspace Window", &Dockspace, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
+    ImGui::Begin("Dockspace Window", NULL, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
     ImGui::SetWindowPos(ImVec2(0,30));
     glfwGetWindowSize(Window, &Width, &Height);
     ImGui::SetWindowSize(ImVec2(Width, Height - 30));
     ImGuiID DockspaceID = ImGui::GetID("Dockspace");
     ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
 
+    //TopBar
     //Style TopBar
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.12,0.23,0.23,1.0));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 8));
+    ImGui::BeginMainMenuBar();
+    //     //Icon
+    //     // ImGui::Image();
+        //Evemt BTN
+    //  //File
+        if(ImGui::BeginMenu("File")){
+            if(ImGui::MenuItem("New")){};
+            if(ImGui::MenuItem("Open")){};
+            if(ImGui::MenuItem("Save")){};
+            if(ImGui::MenuItem("Settings")){};
+        ImGui::EndMenu();
+        }
+        //Window
+        if(ImGui::BeginMenu("Window")){
+            if(ImGui::MenuItem("New")){ CreateNewSubWindow(); };
+            if(ImGui::MenuItem("Log")){ CreateNewSubWindow(1); };
+            if(ImGui::MenuItem("Assets")){ CreateNewSubWindow(2); };
+        ImGui::EndMenu();
+        }
 
-    //Create TopBar
-    ImGui::Begin("TopBar", &Dockspace, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-        ImGui::SetWindowPos(ImVec2(0,0));
-        ImGui::SetWindowSize(ImVec2(Width, 30));
-        //Create Add Sub Window BTN
-        if(ImGui::Button("Add",ImVec2(30, 30))) {CreateNewSubWindow();};
-        //Create Exit BTN
-        ImGui::SetCursorPos(ImVec2(Width-30, 0));
-        if(ImGui::Button("X", ImVec2(30, 30))) {WindowShouldClose = true; Log.MESSAGE("WindowShouldClose " + WindowShouldClose);};
-    ImGui::End();
+        //Title
+        const int LeftOffset = ImGui::CalcTextSize("File").x + ImGui::CalcTextSize("Window").x;
+        const int RightOffset = ImGui::CalcTextSize("Exit").x + ImGui::CalcTextSize("Min").x + ImGui::CalcTextSize("Max").x;
+        ImGui::SetCursorPos(ImVec2((Width - LeftOffset - RightOffset - ImGui::CalcTextSize("Pixel Engine").x)/2 + LeftOffset,0));
+        ImGui::Text("Pixel Engine");
+
+        //Window BTNs
+        const char* Min = "-";
+        const char* Max = "_";
+        const char* Exit = "X";
+        ImVec2 BTNSize = ImVec2(30, 30);
+        //Min
+        ImGui::SetCursorPos(ImVec2(Width - (BTNSize.x * 3) - 12, 0));
+        if(ImGui::Button(Min, BTNSize)) 
+        { glfwIconifyWindow(Window); };
+        //Max
+        ImGui::SetCursorPos(ImVec2(Width -  (BTNSize.x * 2) - 8, 0));
+        if(ImGui::Button(Max, BTNSize)) 
+        { if(!glfwGetWindowAttrib(Window, GLFW_MAXIMIZED)) glfwMaximizeWindow(Window);  
+        else glfwRestoreWindow(Window); };
+        //Exit
+        ImGui::SetCursorPos(ImVec2(Width - BTNSize.x - 4, 0));
+        if(ImGui::Button(Exit, BTNSize)) 
+        { WindowShouldClose = true; };
+    ImGui::EndMainMenuBar();
 
     //Pop TopBar Style
+    ImGui::PopStyleVar();
     ImGui::PopStyleColor();
 
     //Load Sub Windows
@@ -173,8 +210,6 @@ void GUI::Render(){
     }
 
     ImGui::End();
-
-    //Pop Dockspace Style
     ImGui::PopStyleColor();
     ImGui::PopStyleVar();
 
@@ -210,7 +245,7 @@ GUI::~GUI()
 
 //############################## GUI Events ##############################//
 
-void GUI::CreateNewSubWindow(){
+void GUI::CreateNewSubWindow(const int& Type){
     //Create Unique ID
     int IDW;
     bool Findet = false;
@@ -228,7 +263,7 @@ void GUI::CreateNewSubWindow(){
     }
     
     //Create New Window
-    Element* NewWindow = new Element(IDW);
+    Element* NewWindow = new Element(IDW, Type);
     SubWindow.push_back(NewWindow);
     Log.MESSAGE("Created New Window");
 }
@@ -277,7 +312,7 @@ void Element::Render(){
     {
         case 0: break; //Clear Window
         case 1: LOG(); break; //LOG Window
-
+        case 2: Assets(); break; //Assets Window
     }
     ImGui::End();
     ImGui::PopStyleColor();
@@ -287,4 +322,8 @@ void Element::LOG(){
     //Render Log
     ImGui::Text(Log.GetLog().c_str());
 
+}
+
+void Element::Assets(){
+    
 }
