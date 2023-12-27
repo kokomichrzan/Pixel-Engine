@@ -252,15 +252,14 @@ void GUI::CreateNewSubWindow(const int& Type){
     bool Findet = false;
     while (!Findet)
     {
-        IDW = rand();
-        if(!SubWindow.size()) Findet = true;
-
+        IDW = rand();  
         //Chack if IDW is used
+        Findet = true;
         for(int Count = 0; Count < SubWindow.size(); Count++)
-        {
-            Findet = true;
+        { 
             if(SubWindow[Count]->ID == IDW) Findet = false;
         }
+        if(!SubWindow.size()) Findet = true;
     }
     
     //Create New Window
