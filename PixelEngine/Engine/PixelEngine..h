@@ -13,6 +13,9 @@ class PixelEngine
 private:
     LOG Log = LOG();
     int Width, Height;
+    double MouseLastX, MouseLastY, MouseX, MouseY;
+    bool GetPoses = true;
+    int WindowLastX, WindowLastY;
     const std::filesystem::path ExecutePath = std::filesystem::current_path();
     const std::string WindowTitle = "Pixel Engine";
     GLFWwindow* Window;

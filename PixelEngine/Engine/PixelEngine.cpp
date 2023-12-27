@@ -20,6 +20,17 @@ PixelEngine::PixelEngine()
         //Render GUI
         UI.Render();
 
+        //Move
+        glfwGetCursorPos(Window, &MouseX, &MouseY);
+        if((glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && MouseY < 50){
+            if(GetPoses) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+            glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
+            GetPoses = false;
+            glfwSetWindowPos(Window, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
+            glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+        }
+        else GetPoses = true;
+
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);

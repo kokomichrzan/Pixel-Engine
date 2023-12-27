@@ -193,7 +193,7 @@ void GUI::Render(){
         ImGui::SetCursorPos(ImVec2(Width -  (BTNSize.x * 2) - 8, 0));
         if(ImGui::Button(Max, BTNSize)) 
         { if(!glfwGetWindowAttrib(Window, GLFW_MAXIMIZED)) glfwMaximizeWindow(Window);  
-        else glfwRestoreWindow(Window); };
+        else {glfwRestoreWindow(Window); glfwSetWindowSize(Window, 1000, 900);} };
         //Exit
         ImGui::SetCursorPos(ImVec2(Width - BTNSize.x - 4, 0));
         if(ImGui::Button(Exit, BTNSize)) 
