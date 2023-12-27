@@ -20,12 +20,6 @@ PixelEngine::PixelEngine()
         //Render GUI
         UI.Render();
 
-        //Check Window Size
-        glfwGetWindowSize(Window, &Width, &Height);
-        if(Width < 600) Width = 600;
-        if(Height < 400) Height = 400;
-        glfwSetWindowSize(Window, Width, Height); 
-
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);
@@ -35,6 +29,7 @@ PixelEngine::PixelEngine()
 PixelEngine::~PixelEngine()
 {
     //Save Window Size
+    glfwGetWindowSize(Window, &Width, &Height);
     Data::Array WindowSettings = Data::Array("Settings", 5);
     WindowSettings.Read("Window");
     WindowSettings.Content[2] = std::to_string(Width);

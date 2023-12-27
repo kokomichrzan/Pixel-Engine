@@ -48,9 +48,9 @@ namespace GraphicEngine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         Log.INFO("Seted Window Glad Hints");
 
-        //Set Window Settings
+        //Remove TopBar
         glfwWindowHint(GLFW_DECORATED, false);
-        Log.INFO("Removed Top Bar");
+        Log.INFO("Remove TopBar");
 
         //Set Resolution
         if(WindowSettings.AutoResolution){
@@ -77,9 +77,10 @@ namespace GraphicEngine
             Log.WARNING("Can not Create Window");
         }
         
-        //Set Window Position
-        glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2);
-        Log.INFO("Center The Window");
+        //Set Prop
+        glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2); //Set Window Position
+        glfwSetWindowSizeLimits(Window, 1000, 700, GLFW_DONT_CARE, GLFW_DONT_CARE); //Set Window MinSize
+        Log.INFO("Seted Windo Prop");
 
         //Set Context
         glfwMakeContextCurrent(Window);
@@ -286,7 +287,7 @@ void Element::Render(){
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
 
     //Start Window
-    ImGui::Begin(("Window " + std::to_string(ID)).c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+    ImGui::Begin(("Window " + std::to_string(ID)).c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar);
     
     //Title Bar
     ImGui::BeginMenuBar();
