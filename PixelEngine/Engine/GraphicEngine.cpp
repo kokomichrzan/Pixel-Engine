@@ -318,6 +318,8 @@ void Element::Render(){
     ImGui::PopStyleColor();
 }
 
+//############################## Render Type ##############################//
+
 void Element::LOG(){
     //Render Log
     ImGui::Text(Log.GetLog().c_str());
@@ -325,5 +327,5 @@ void Element::LOG(){
 }
 
 void Element::Assets(){
-    
+
 }
