@@ -12,6 +12,7 @@ class GraphicEngine
 {
 private: //Programs
     LOG Log = LOG();
+    
 private: //Varibles
     double MouseLastX, MouseLastY, MouseX, MouseY;
     bool GetPoses = true, GetResize = true, ResizeLeftLock = false, ResizeRightLock = false, 
