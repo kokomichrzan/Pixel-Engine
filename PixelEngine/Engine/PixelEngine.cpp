@@ -22,7 +22,7 @@ PixelEngine::PixelEngine()
         UI.Render();
 
         //Move Window
-        Graphics.Move(Window);
+        Graphics.Events(Window);
 
         //Poll Event And Swap Buffer
         glfwPollEvents();

@@ -28,25 +28,22 @@ GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
 
     //Init Window
     glfwInit();
-    Log.INFO("GLFW Initialized");
 
     //Get Window Params
     GLFWmonitor* Monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
 
     //Refresh Rate
-    if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); Log.INFO("Setted Refresh Rate to " + Mode->refreshRate);}
-    else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); Log.INFO("Setted Refresh Rate to " + WindowSettings.RefreshRate);}
+    if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); Log.INFO("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
+    else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); Log.INFO("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
     
     //Set Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    Log.INFO("Seted Window Glad Hints");
 
     //Remove TopBar
     glfwWindowHint(GLFW_DECORATED, false);
-    Log.INFO("Remove TopBar");
 
     //Set Resolution
     if(WindowSettings.AutoResolution){
@@ -76,7 +73,6 @@ GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
     //Set Prop
     glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2); //Set Window Position
     glfwSetWindowSizeLimits(Window, 1000, 700, GLFW_DONT_CARE, GLFW_DONT_CARE); //Set Window MinSize
-    Log.INFO("Seted Windo Prop");
 
     //Set Context
     glfwMakeContextCurrent(Window);
@@ -90,6 +86,11 @@ GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
     
 }
 
+void GraphicEngine::Events(GLFWwindow* Window){
+
+    Move(Window);
+
+}
 
 void GraphicEngine::Move(GLFWwindow* Window){
     //Move

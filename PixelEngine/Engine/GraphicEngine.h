@@ -16,7 +16,9 @@ private: //Varibles
     double MouseLastX, MouseLastY, MouseX, MouseY;
     bool GetPoses = true;
     int WindowLastX, WindowLastY;
-    
+
+private: // Window Events
+    void Move(GLFWwindow* Window);
 
 private: //Settings
     struct Settings{
@@ -29,6 +31,5 @@ private: //Settings
 
 public: //Functions
     GLFWwindow* CreateWindow(const std::string& WindowTitle = "");
-    void Move(GLFWwindow* Window);
-
+    void Events(GLFWwindow* Window);
 };
