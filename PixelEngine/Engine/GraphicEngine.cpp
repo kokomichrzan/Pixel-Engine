@@ -113,7 +113,11 @@ void GraphicEngine::Resize(GLFWwindow* Window){
     glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
     glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
 
-    if(!MoveLock)
+    if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && (( MouseX >= EventSize && MouseX <= WindowWidth - EventSize && MouseY >= EventSize && MouseY <= WindowHeight - EventSize) || (MoveElemet)) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock))
+         MoveElemet = true;
+    else MoveElemet = false;
+
+    if(!MoveLock && !MoveElemet)
     {
         //Left
         if(((MouseX < EventSize && MouseY > 30 && (MouseY < (WindowHeight - EventSize))) || ResizeLeftLock) && !(ResizeTopLock || ResizeBottomLock || ResizeRightLock)) {

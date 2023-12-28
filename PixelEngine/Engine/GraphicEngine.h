@@ -6,8 +6,6 @@
 #include "Data.h"
 #include "LOG.h"
 
-//############################## Window ##############################//
-
 class GraphicEngine
 {
 private: //Programs
@@ -15,10 +13,9 @@ private: //Programs
     
 private: //Varibles
     double MouseLastX, MouseLastY, MouseX, MouseY;
+    int WindowLastX, WindowLastY, WindowWidth, WindowHeight;
     bool GetPoses = true, GetResize = true, ResizeLeftLock = false, ResizeRightLock = false, 
-    ResizeTopLock = false, ResizeBottomLock = false, MoveLock = false;
-    int WindowLastX, WindowLastY;
-    int WindowWidth, WindowHeight;
+    ResizeTopLock = false, ResizeBottomLock = false, MoveLock = false, MoveElemet = false;
     const int EventSize = 10;
     const std::string WindowTitle = "Pixel Engine";
 
