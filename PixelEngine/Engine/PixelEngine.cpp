@@ -6,11 +6,6 @@ PixelEngine::PixelEngine()
     GraphicEngine Graphics = GraphicEngine();
     Window = Graphics.CreateWindow(WindowTitle);
     GUI UI = GUI(Window);
-
-    //Get Assets
-    Data::Vector Models = Data::Vector("Models"); Log.MESSAGE("Opened Models Dir");
-    Data::Vector Textures = Data::Vector("Textures"); Log.MESSAGE("Opened Textures Dir");
-    Data::Vector Materials = Data::Vector("Materials"); Log.MESSAGE("Opened Materials Dir");
     
     //While Loop
     while(!(glfwWindowShouldClose(Window) || UI.WindowShouldClose)){

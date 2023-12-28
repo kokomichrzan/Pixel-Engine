@@ -14,16 +14,13 @@ GUI::GUI(GLFWwindow* GetWindow)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-    Log.INFO("Loaded ImGui Flags");
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    Log.INFO("Set ImGui Style");
 
     //Init IMGUI
     ImGui_ImplGlfw_InitForOpenGL(Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-    Log.INFO("Init Glad and GLFW for ImGUi");
 
     //Load SubWindows
     Data::Vector GuiLoad = Data::Vector("Settings");
@@ -187,7 +184,7 @@ void GUI::DeleteSubWindow(const int& ID){
 Element::Element(const int& GetID, int GetType){
     ID = GetID;
     Type = GetType;
-    
+
 }
 
 void Element::Render(){
@@ -237,5 +234,6 @@ void Element::LogElement(){
 }
 
 void Element::AssetsElement(){
+
 
 }

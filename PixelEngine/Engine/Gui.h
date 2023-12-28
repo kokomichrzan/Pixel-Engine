@@ -23,6 +23,12 @@ public: //Element Varibles
     int ID = 0;
     bool RenderElement = true;
 
+private: //Element Type Data
+    //Get Assets
+    Data::Vector Models = Data::Vector("Models");
+    Data::Vector Textures = Data::Vector("Textures");
+    Data::Vector Materials = Data::Vector("Materials");
+
 private: //Element Types
     void LogElement();
     void AssetsElement();
