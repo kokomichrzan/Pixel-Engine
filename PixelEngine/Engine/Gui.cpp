@@ -230,6 +230,7 @@ void Element::Render(){
 void Element::LogElement(){
     //Render Log
     ImGui::Text(Log.GetLog().c_str());
+    if(Log.GetUpdateScroll())ImGui::SetScrollHereY(1.0f);
 
 }
 
