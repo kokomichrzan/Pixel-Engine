@@ -14,7 +14,8 @@ private: //Programs
     LOG Log = LOG();
 private: //Varibles
     double MouseLastX, MouseLastY, MouseX, MouseY;
-    bool GetPoses = true, GetResize = true, ResizeLeftLock = false, ResizeRightLock = false, ResizeTopLock = false, ResizeBottomLock = false, MoveLock = false;
+    bool GetPoses = true, GetResize = true, ResizeLeftLock = false, ResizeRightLock = false, 
+    ResizeTopLock = false, ResizeBottomLock = false, MoveLock = false;
     int WindowLastX, WindowLastY;
     int WindowWidth, WindowHeight;
     const int EventSize = 10;
