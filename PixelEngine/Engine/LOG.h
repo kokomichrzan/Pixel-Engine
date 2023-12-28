@@ -2,17 +2,19 @@
 //LIBs
 #include <string>
 
-//Saved LOG
-static std::string LOGDATA;
-static bool UpdateScroll = false;
+//LOG Data
+static std::string LogData;
+static bool ScrollDown = false;
 
 class LOG
 {
-public: //Methodes
+public: //Add Log
     void WARNING(const std::string& Value);
     void INFO(const std::string& Value);
     void MESSAGE(const std::string& Value);
-    std::string GetLog();
-    bool GetUpdateScroll();
+
+public: //Get Log
+    const std::string& GetLog();
+    bool CheckIfScrollDown();
 
 };

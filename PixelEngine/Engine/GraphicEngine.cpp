@@ -1,6 +1,6 @@
 #include "GraphicEngine.h"
 
-GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
+GLFWwindow* GraphicEngine::CreateWindow()
 {
     //Load Settings
     Settings WindowSettings = Settings();
@@ -174,4 +174,16 @@ void GraphicEngine::Resize(GLFWwindow* Window){
         glViewport(0,0, WindowWidth, WindowHeight);
 
     }
+}
+
+void GraphicEngine::SaveWindowParams(GLFWwindow* Window){
+    //Save Window Size
+    glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
+    Data::Array WindowSettings = Data::Array("Settings", 5);
+    WindowSettings.Read("Window");
+    WindowSettings.Content[2] = std::to_string(WindowWidth);
+    WindowSettings.Content[3] = std::to_string(WindowHeight);
+    WindowSettings.Save("Window");
+    Log.MESSAGE("Window Size Saved");
+
 }

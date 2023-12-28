@@ -2,9 +2,9 @@
 
 PixelEngine::PixelEngine()
 {
-    //Create Window / UI
-    GraphicEngine Graphics = GraphicEngine();
-    Window = Graphics.CreateWindow(WindowTitle);
+    //Create Window And UI
+    Graphics = new GraphicEngine();
+    Window = Graphics->CreateWindow();
     GUI UI = GUI(Window);
     
     //While Loop
@@ -17,26 +17,25 @@ PixelEngine::PixelEngine()
         UI.Render();
 
         //Events Window
-        Graphics.Events(Window);
+        Graphics->Events(Window);
 
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);
     }
+
 }
 
 PixelEngine::~PixelEngine()
 {
-    //Save Window Size
-    glfwGetWindowSize(Window, &Width, &Height);
-    Data::Array WindowSettings = Data::Array("Settings", 5);
-    WindowSettings.Read("Window");
-    WindowSettings.Content[2] = std::to_string(Width);
-    WindowSettings.Content[3] = std::to_string(Height);
-    WindowSettings.Save("Window");
-    Log.MESSAGE("Window Size Saved");
+    //Save Window Params
+    Graphics->SaveWindowParams(Window);
+
+    //Remove Graphics
+    delete Graphics;
 
     //Destroy Window
     glfwDestroyWindow(Window);
     glfwTerminate();
+
 }

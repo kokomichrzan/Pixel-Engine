@@ -2,12 +2,12 @@
 
 //############################## GUI ##############################//
 
-GUI::GUI(GLFWwindow* GetWindow)
+GUI::GUI(GLFWwindow* WindowPtr)
 {
-    //Get Window Ptr
-    Window = GetWindow;
+    //Set Window Ptr
+    Window = WindowPtr;
 
-    // Setup Dear ImGui context
+    // Setup Dear ImGui Context And Flags
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -18,7 +18,7 @@ GUI::GUI(GLFWwindow* GetWindow)
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    //Init IMGUI
+    //Set ImGui GLFW and GLAD
     ImGui_ImplGlfw_InitForOpenGL(Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
@@ -27,9 +27,33 @@ GUI::GUI(GLFWwindow* GetWindow)
     GuiLoad.Read("Gui");
     for(int Count = 0; Count < GuiLoad.Content.size() - 1; Count += 2){
         Element* LoadSubWindow = new Element(std::stoi(GuiLoad.Content[Count]), std::stoi(GuiLoad.Content[Count + 1]));
-        SubWindow.push_back(LoadSubWindow);
+        SubWindows.push_back(LoadSubWindow);
+
     }
     Log.INFO("GUI Loaded");
+
+}
+
+GUI::~GUI()
+{
+    //Save And Delete Sub Windows
+    Data::Vector GuiSave = Data::Vector("Settings");
+    for(int Count = 0; Count < SubWindows.size(); Count++){
+        //Save Window ID and Type
+        GuiSave.Add(std::to_string(SubWindows[Count]->ID));
+        GuiSave.Add(std::to_string(SubWindows[Count]->Type));
+
+        //Delete Sub Window
+        delete SubWindows[Count];
+        
+    }
+    GuiSave.Save("Gui");
+    Log.INFO("GUI Saved");
+
+    //Shut Down ImGui
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
 }
 
@@ -39,27 +63,23 @@ void GUI::Render(){
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    //Set Dockspace Style
+    //Create MainWindow
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
-
+    ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
+    
     //Create Dockspace
-    ImGui::Begin("Dockspace Window", NULL, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
+    glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
     ImGui::SetWindowPos(ImVec2(0,30));
-    glfwGetWindowSize(Window, &Width, &Height);
-    ImGui::SetWindowSize(ImVec2(Width, Height - 30));
+    ImGui::SetWindowSize(ImVec2(WindowWidth, WindowHeight - 30));
     ImGuiID DockspaceID = ImGui::GetID("Dockspace");
     ImGui::DockSpace(DockspaceID, ImVec2(0,0), ImGuiDockNodeFlags_PassthruCentralNode);
 
     //TopBar
-    //Style TopBar
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.12,0.23,0.23,1.0));
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 8));
     ImGui::BeginMainMenuBar();
-    //     //Icon
-    //     // ImGui::Image();
-        //Evemt BTN
-    //  //File
+        //File
         if(ImGui::BeginMenu("File")){
             if(ImGui::MenuItem("New")){};
             if(ImGui::MenuItem("Open")){};
@@ -78,39 +98,30 @@ void GUI::Render(){
         //Title
         const int LeftOffset = ImGui::CalcTextSize("File").x + ImGui::CalcTextSize("Window").x;
         const int RightOffset = ImGui::CalcTextSize("Exit").x + ImGui::CalcTextSize("Min").x + ImGui::CalcTextSize("Max").x;
-        ImGui::SetCursorPos(ImVec2((Width - LeftOffset - RightOffset - ImGui::CalcTextSize("Pixel Engine").x)/2 + LeftOffset,0));
+        ImGui::SetCursorPos(ImVec2((WindowWidth - LeftOffset - RightOffset - ImGui::CalcTextSize("Pixel Engine").x)/2 + LeftOffset, 0));
         ImGui::Text("Pixel Engine");
 
-        //Window BTNs
-        const char* Min = "-";
-        const char* Max = "_";
-        const char* Exit = "X";
-        ImVec2 BTNSize = ImVec2(30, 30);
+        //Window Events
         //Min
-        ImGui::SetCursorPos(ImVec2(Width - (BTNSize.x * 3) - 12, 0));
-        if(ImGui::Button(Min, BTNSize)) 
-        { glfwIconifyWindow(Window); };
+        ImGui::SetCursorPos(ImVec2(WindowWidth - (BTNSize.x * 3) - 12, 0));
+        if(ImGui::Button(MinBTN, BTNSize)) { glfwIconifyWindow(Window); };
         //Max
-        ImGui::SetCursorPos(ImVec2(Width -  (BTNSize.x * 2) - 8, 0));
-        if(ImGui::Button(Max, BTNSize)) 
-        { if(!glfwGetWindowAttrib(Window, GLFW_MAXIMIZED)) glfwMaximizeWindow(Window);  
+        ImGui::SetCursorPos(ImVec2(WindowWidth -  (BTNSize.x * 2) - 8, 0));
+        if(ImGui::Button(MaxBTN, BTNSize)) { if(!glfwGetWindowAttrib(Window, GLFW_MAXIMIZED)) glfwMaximizeWindow(Window);  
         else {glfwRestoreWindow(Window); glfwSetWindowSize(Window, 1000, 900);} };
         //Exit
-        ImGui::SetCursorPos(ImVec2(Width - BTNSize.x - 4, 0));
-        if(ImGui::Button(Exit, BTNSize)) 
-        { WindowShouldClose = true; };
+        ImGui::SetCursorPos(ImVec2(WindowWidth - BTNSize.x - 4, 0));
+        if(ImGui::Button(ExitBTN, BTNSize)) { WindowShouldClose = true; };
     ImGui::EndMainMenuBar();
-
-    //Pop TopBar Style
     ImGui::PopStyleVar();
     ImGui::PopStyleColor();
 
-    //Load Sub Windows
-    for(int Count = 0; Count < SubWindow.size(); Count++){
-        if(SubWindow[Count]->RenderElement)SubWindow[Count]->Render();
+    //Render Sub Windows
+    for(int Count = 0; Count < SubWindows.size(); Count++){
+        if(SubWindows[Count]->RenderElement) SubWindows[Count]->Render();
         else DeleteSubWindow(Count);
-    }
 
+    }
     ImGui::End();
     ImGui::PopStyleColor();
     ImGui::PopStyleVar();
@@ -118,106 +129,78 @@ void GUI::Render(){
     //Render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    GLFWwindow* backup_current_context = glfwGetCurrentContext();
+    GLFWwindow* BackUPContext = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
-    glfwMakeContextCurrent(backup_current_context);
+    glfwMakeContextCurrent(BackUPContext);
 
 }
 
-GUI::~GUI()
-{
-    //Save And Delete Sub Windows
-    Data::Vector GuiSave = Data::Vector("Settings");
-    for(int Count = 0; Count < SubWindow.size(); Count++){
-        GuiSave.Add(std::to_string(SubWindow[Count]->ID));
-        GuiSave.Add(std::to_string(SubWindow[Count]->Type));
-        Log.INFO("Removed Window " + Count);
-
-        //Delete Sub Window
-        delete SubWindow[Count];
-    }
-    GuiSave.Save("Gui");
-    Log.INFO("GUI Saved");
-
-    //Shut Down ImGui
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-}
-
-//############################## GUI Events ##############################//
-
-void GUI::CreateNewSubWindow(const int& Type){
+//Gui Events
+void GUI::CreateNewSubWindow(const unsigned int& Type){
     //Create Unique ID
-    int IDW;
+    unsigned int ID;
     bool Findet = false;
     while (!Findet)
     {
-        IDW = rand();  
-        //Chack if IDW is used
+        //Set Seed And Get Random
+        srand((unsigned) time(NULL));
+        ID = rand();  
+
+        //Chack if ID is unique
         Findet = true;
-        for(int Count = 0; Count < SubWindow.size(); Count++)
+        for(int Count = 0; Count < SubWindows.size(); Count++)
         { 
-            if(SubWindow[Count]->ID == IDW) Findet = false;
+            if(SubWindows[Count]->ID == ID) Findet = false;
         }
-        if(!SubWindow.size()) Findet = true;
+        if(!SubWindows.size()) Findet = true;
+
     }
     
     //Create New Window
-    Element* NewWindow = new Element(IDW, Type);
-    SubWindow.push_back(NewWindow);
-    Log.MESSAGE("Created New Window");
+    Element* NewWindow = new Element(ID, Type);
+    SubWindows.push_back(NewWindow);
+    Log.MESSAGE("Created New Sub Window with ID " + std::to_string(ID));
 
 }
 
-void GUI::DeleteSubWindow(const int& ID){
-    delete SubWindow[ID];
-    SubWindow.erase(std::next(SubWindow.begin(), ID));
-    Log.MESSAGE("Removed Sub Window");
+void GUI::DeleteSubWindow(const unsigned int& ID){
+    Log.MESSAGE("Removed Sub Window with ID " + std::to_string(SubWindows[ID]->ID));
+    delete SubWindows[ID];
+    SubWindows.erase(std::next(SubWindows.begin(), ID));
 
 }
 
 //############################## Elements ##############################//
 
-Element::Element(const int& GetID, int GetType){
+Element::Element(const unsigned int& GetID, const unsigned int& GetType){
     ID = GetID;
     Type = GetType;
 
 }
 
 void Element::Render(){
-    //Set Style
+    //Create Window
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
-
-    //Start Window
     ImGui::Begin(("Window " + std::to_string(ID)).c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar);
     
     //Title Bar
     ImGui::BeginMenuBar();
         if(ImGui::BeginMenu("Type")){
-            if(ImGui::MenuItem("None"))
-            {
-                Type = 0;
-            }
-            if(ImGui::MenuItem("LOG"))
-            {
-                Type = 1;
-            }
+            if(ImGui::MenuItem("None")) Type = 0;
+            if(ImGui::MenuItem("Log")) Type = 1;
+            if(ImGui::MenuItem("Assets")) Type = 2;
         ImGui::EndMenu();
         }
-        if(ImGui::MenuItem("Exit")){
-            RenderElement = false;
-        }
+        if(ImGui::MenuItem("Exit")) RenderElement = false;
     ImGui::EndMenuBar();
 
     //Render Window Type
     switch (Type)
     {
         case 0: break; //Clear Window
-        case 1: LogElement(); break; //LOG Window
-        case 2: AssetsElement(); break; //Assets Window
+        case 1: LogElement(); break; //Log Element
+        case 2: AssetsElement(); break; //Assets Element
     }
 
     ImGui::End();
@@ -225,12 +208,11 @@ void Element::Render(){
 
 }
 
-//############################## Render Type ##############################//
+//Elements Types
 
 void Element::LogElement(){
-    //Render Log
     ImGui::Text(Log.GetLog().c_str());
-    if(Log.GetUpdateScroll())ImGui::SetScrollHereY(1.0f);
+    if(Log.CheckIfScrollDown())ImGui::SetScrollHereY(1.0f);
 
 }
 

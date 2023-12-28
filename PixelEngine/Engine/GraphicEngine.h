@@ -20,6 +20,7 @@ private: //Varibles
     int WindowLastX, WindowLastY;
     int WindowWidth, WindowHeight;
     const int EventSize = 10;
+    const std::string WindowTitle = "Pixel Engine";
 
 private: // Window Behavior
     void Move(GLFWwindow* Window);
@@ -35,6 +36,7 @@ private: //Settings
     };
 
 public: //Functions
-    GLFWwindow* CreateWindow(const std::string& WindowTitle = "");
+    GLFWwindow* CreateWindow();
     void Events(GLFWwindow* Window);
+    void SaveWindowParams(GLFWwindow* Window);
 };
