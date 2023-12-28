@@ -33,7 +33,7 @@ private: //Varibles
 private: // Window Behavior
     void Move(GLFWwindow* Window);
     void Resize(GLFWwindow* Window);
-    void TogleFullscreen(GLFWwindow* Window);
+    void ToggleFullscreen(GLFWwindow* Window);
 
 public: //Functions
     GLFWwindow* CreateWindow();

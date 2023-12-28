@@ -89,7 +89,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
 void GraphicEngine::Events(GLFWwindow* Window){
     Resize(Window);
     Move(Window);
-    TogleFullscreen(Window);
+    ToggleFullscreen(Window);
 
 }
 
@@ -99,7 +99,8 @@ void GraphicEngine::Move(GLFWwindow* Window){
     glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
 
     if(((MouseY < EventMoveSize && MouseY > EventResizeSize) || MoveEvent) && //Cursor on TopBar or Is Currently Moving
-    !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){ //Is Currently not Resizing
+    !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock) && //Is Currently not Resizing
+    !FullScreen){ //Check if is not fullscreen
         if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){ //Is Cursor Down
             //Get First Mouse Position
             if(MoveGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
@@ -133,7 +134,7 @@ void GraphicEngine::Resize(GLFWwindow* Window){
     else MouseInSideLock = false;
 
     //Check if you can resize window
-    if(!MoveEvent && !MouseInSideLock)
+    if(!MoveEvent && !MouseInSideLock && !FullScreen)
     {
         //Left Resize
         if(((MouseX < EventResizeSize && //Check if cursor is on left border
@@ -219,7 +220,7 @@ void GraphicEngine::Resize(GLFWwindow* Window){
 
 }
 
-void GraphicEngine::TogleFullscreen(GLFWwindow* Window){
+void GraphicEngine::ToggleFullscreen(GLFWwindow* Window){
     //Check if F11 Pressed
     if(glfwGetKey(Window, GLFW_KEY_F11) == GLFW_PRESS){
         if(!F11Pressed){ //OneClick
@@ -252,6 +253,7 @@ void GraphicEngine::SaveWindowParams(GLFWwindow* Window){
     Data::Array WindowSettings = Data::Array("Settings", 4);
     WindowSettings.Read("Window");
     //Set New Window Size
+    WindowSettings.Content[0] = std::to_string(FullScreen);
     WindowSettings.Content[1] = std::to_string(WindowWidth);
     WindowSettings.Content[2] = std::to_string(WindowHeight);
     //Save File
