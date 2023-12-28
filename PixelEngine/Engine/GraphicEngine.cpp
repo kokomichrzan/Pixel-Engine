@@ -4,24 +4,22 @@ GLFWwindow* GraphicEngine::CreateWindow()
 {
     //Load Settings
     Settings WindowSettings = Settings();
-    Data::Array SettingsData = Data::Array("Settings", 5);
+    Data::Array SettingsData = Data::Array("Settings", 4);
     SettingsData.Read("Window");
     if(!SettingsData.Exist("Window")){
         SettingsData.Content[0] = std::to_string(WindowSettings.FullScreen);
-        SettingsData.Content[1] = std::to_string(WindowSettings.AutoResolution);
-        SettingsData.Content[2] = std::to_string(WindowSettings.Width);
-        SettingsData.Content[3] = std::to_string(WindowSettings.Height);
-        SettingsData.Content[4] = std::to_string(WindowSettings.RefreshRate);
+        SettingsData.Content[1] = std::to_string(WindowSettings.Width);
+        SettingsData.Content[2] = std::to_string(WindowSettings.Height);
+        SettingsData.Content[3] = std::to_string(WindowSettings.RefreshRate);
 
         SettingsData.Save("Window");
         Log.INFO("Create Window Settings");
 
     }else{
         WindowSettings.FullScreen =     std::stoi(SettingsData.Content[0]);
-        WindowSettings.AutoResolution = std::stoi(SettingsData.Content[1]);
-        WindowSettings.Width =          std::stoi(SettingsData.Content[2]);
-        WindowSettings.Height =         std::stoi(SettingsData.Content[3]);
-        WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[4]);
+        WindowSettings.Width =          std::stoi(SettingsData.Content[1]);
+        WindowSettings.Height =         std::stoi(SettingsData.Content[2]);
+        WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[3]);
 
         Log.INFO("Loaded Window Settings");
     }
@@ -29,13 +27,19 @@ GLFWwindow* GraphicEngine::CreateWindow()
     //Init Window
     glfwInit();
 
+    //Set Fullscreen and Refresh Rate
+    FullScreen = WindowSettings.FullScreen;
+    RefreshRate = WindowSettings.RefreshRate;
+
     //Get Window Params
     GLFWmonitor* Monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
 
     //Refresh Rate
-    if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); Log.INFO("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
-    else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); Log.INFO("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
+    if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
+    Log.INFO("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
+    else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); 
+    Log.INFO("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
     
     //Set Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -46,7 +50,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
     glfwWindowHint(GLFW_DECORATED, false);
 
     //Set Resolution
-    if(WindowSettings.AutoResolution){
+    if(WindowSettings.FullScreen){
         WindowSettings.Width = Mode->width;
         WindowSettings.Height = Mode->height;
     }
@@ -64,11 +68,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
         Log.INFO("Create Window");
     }
-
-    //Check If Window Created
-    if(!Window){
-        Log.WARNING("Can not Create Window");
-    }
+    if(!Window) Log.WARNING("Can not Create Window");
     
     //Set Prop
     glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2); //Set Window Position
@@ -89,22 +89,33 @@ GLFWwindow* GraphicEngine::CreateWindow()
 void GraphicEngine::Events(GLFWwindow* Window){
     Resize(Window);
     Move(Window);
+    TogleFullscreen(Window);
 
 }
 
 void GraphicEngine::Move(GLFWwindow* Window){
+    //Get Positions
     glfwGetCursorPos(Window, &MouseX, &MouseY);
     glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
-    if(((MouseY < 30 && MouseY > EventSize) || MoveLock) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){
-        if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-            if(GetPoses) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-            GetPoses = false;
-            MoveLock = true;
+
+    if(((MouseY < EventMoveSize && MouseY > EventResizeSize) || MoveEvent) && //Cursor on TopBar or Is Currently Moving
+    !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){ //Is Currently not Resizing
+        if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){ //Is Cursor Down
+            //Get First Mouse Position
+            if(MoveGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+            MoveGetEvent = false;
+            //Set Program is currently Moving
+            MoveEvent = true; 
+            //Set New Window Pos
             glfwSetWindowPos(Window, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
+            //Set Cursor to last Position on App Screen
             glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+
         }
-        else {GetPoses = true; MoveLock= false;};
+        else {MoveGetEvent = true; MoveEvent= false;}; //Set Program stops moving screen
+
     }
+
 }
     
 void GraphicEngine::Resize(GLFWwindow* Window){
@@ -113,80 +124,137 @@ void GraphicEngine::Resize(GLFWwindow* Window){
     glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
     glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
 
-    if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && (( MouseX >= EventSize && MouseX <= WindowWidth - EventSize && MouseY >= EventSize && MouseY <= WindowHeight - EventSize) || (MoveElemet)) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock))
-         MoveElemet = true;
-    else MoveElemet = false;
+    //Check if User is pressing key inside window
+    if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && //Is Left Button Pressed
+    (( MouseX >= EventResizeSize && MouseX <= WindowWidth - EventResizeSize && 
+    MouseY >= EventResizeSize && MouseY <= WindowHeight - EventResizeSize) || (MouseInSideLock)) && //Cursor is inside window
+    !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock)) //Is not currently Resize
+    MouseInSideLock = true;
+    else MouseInSideLock = false;
 
-    if(!MoveLock && !MoveElemet)
+    //Check if you can resize window
+    if(!MoveEvent && !MouseInSideLock)
     {
-        //Left
-        if(((MouseX < EventSize && MouseY > 30 && (MouseY < (WindowHeight - EventSize))) || ResizeLeftLock) && !(ResizeTopLock || ResizeBottomLock || ResizeRightLock)) {
-            //Resize
+        //Left Resize
+        if(((MouseX < EventResizeSize && //Check if cursor is on left border
+        MouseY > 30 && (MouseY < (WindowHeight - EventResizeSize))) || ResizeLeftLock) && //Check if is not on topbar and bottombar adn if is lock
+        !(ResizeTopLock || ResizeBottomLock || ResizeRightLock)) { //Check if is not currently resize else edge
             if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-                    GetResize = false;
+                //Get First Data
+                if(ResizeGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    ResizeGetEvent = false;
+                    //Set Reszie Left
                     ResizeLeftLock = true;
-                    if((WindowWidth - (MouseX - MouseLastX)) >= 1000) {
-                        glfwSetWindowPos(Window, int(WindowLastX + (MouseX - MouseLastX)), WindowLastY);
-                        glfwSetWindowSize(Window, int(WindowWidth - (MouseX - MouseLastX)), WindowHeight);
-                        glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+                    //Resize
+                    if((WindowWidth - (MouseX - MouseLastX)) >= 1000) { // Check Min Width
+                        glfwSetWindowPos(Window, int(WindowLastX + (MouseX - MouseLastX)), WindowLastY); //Set New Window Pos
+                        glfwSetWindowSize(Window, int(WindowWidth - (MouseX - MouseLastX)), WindowHeight); //Set New Window Size
+                        glfwSetCursorPos(Window, MouseLastX, MouseLastY); //Set Cursor on Last position
+
                     }
-                } else {GetResize = true; ResizeLeftLock = false;};
+
+                } else {ResizeGetEvent = true; ResizeLeftLock = false;};
+
             }
 
-        //Right
-        if(((MouseX > (WindowWidth - EventSize) && MouseY > 30 && (MouseY < (WindowHeight - EventSize))) || ResizeRightLock) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock)){ 
-            //Resize
+        //Right Resize
+        if(((MouseX > (WindowWidth - EventResizeSize) &&  //Check if cursor is on right border
+        MouseY > 30 && (MouseY < (WindowHeight - EventResizeSize))) || ResizeRightLock) && //Check if is not on topbar and bottombar adn if is lock
+        !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock)){ //Check if is not currently resize else edge
             if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-                    GetResize = false;
+                //Get First Data
+                if(ResizeGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    ResizeGetEvent = false;
+                    //Set Reszie Right
                     ResizeRightLock = true;
-                    if(MouseX >= 1000) glfwSetWindowSize(Window, int(MouseX), WindowHeight);
-                } else {GetResize = true; ResizeRightLock = false;};
+                    if(MouseX >= 1000) // Check Min Width
+                    glfwSetWindowSize(Window, int(MouseX), WindowHeight); //Set new Window Size
+
+                } else {ResizeGetEvent = true; ResizeRightLock = false;};
+
         }
 
-        //Top
-        if(((MouseY < EventSize || ResizeTopLock)) && !(ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){ 
-            //Resize
+        //Top Resize
+        if(((MouseY < EventResizeSize || ResizeTopLock)) && //Check if Cursor is on top edge and if is lock on top resize
+        !(ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){ //Check if is not currently resize else edge
             if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-                    GetResize = false;
+                //Get First Data
+                if(ResizeGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    ResizeGetEvent = false;
+                    //Set Resize Top
                     ResizeTopLock = true;
-                    if((WindowHeight - (MouseY - MouseLastY)) >= 900) {
-                        glfwSetWindowPos(Window, WindowLastX, int(WindowLastY + (MouseY - MouseLastY)));
-                        glfwSetWindowSize(Window, WindowWidth, int(WindowHeight - (MouseY - MouseLastY)));
-                        glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+                    if((WindowHeight - (MouseY - MouseLastY)) >= 900) { //Check Min Height
+                        glfwSetWindowPos(Window, WindowLastX, int(WindowLastY + (MouseY - MouseLastY))); //Set New Window Pos
+                        glfwSetWindowSize(Window, WindowWidth, int(WindowHeight - (MouseY - MouseLastY))); //Set New Window Size
+                        glfwSetCursorPos(Window, MouseLastX, MouseLastY); //Set Cursor on Last position
+
                     }
-                } else {GetResize = true; ResizeTopLock = false;};
+                } else {ResizeGetEvent = true; ResizeTopLock = false;};
+
         }
 
-        //Bottom
-        if((MouseY > (WindowHeight - EventSize) || ResizeBottomLock) && !(ResizeTopLock || ResizeLeftLock || ResizeRightLock)){ 
-            //Resize
+        //Bottom Resize
+        if((MouseY > (WindowHeight - EventResizeSize) || ResizeBottomLock) && //Check if Cursor is on bottom edge and if is lock on bottom resize
+        !(ResizeTopLock || ResizeLeftLock || ResizeRightLock)){ //Check if is not currently resize else edge
             if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-                    GetResize = false;
+                //Get First Data
+                if(ResizeGetEvent) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    ResizeGetEvent = false;
+                    //Set Resize Bottom
                     ResizeBottomLock = true;
-                    if(MouseY >= 900) glfwSetWindowSize(Window, WindowWidth, int(MouseY));
-                } else {GetResize = true; ResizeBottomLock = false;};
+                    if(MouseY >= 900) //Check Min Height
+                    glfwSetWindowSize(Window, WindowWidth, int(MouseY)); //Set New Window Size
+
+                } else {ResizeGetEvent = true; ResizeBottomLock = false;};
+                
         }
         
-        //Check MinSize
+        //Check Min Sizes
         if(WindowWidth < 1000) glfwSetWindowSize(Window, 1000, WindowHeight);
         if(WindowHeight < 900) glfwSetWindowSize(Window, WindowWidth, 900);
-        //SetGLad
+        //Set New GLad
         glViewport(0,0, WindowWidth, WindowHeight);
 
     }
+
+}
+
+void GraphicEngine::TogleFullscreen(GLFWwindow* Window){
+    //Check if F11 Pressed
+    if(glfwGetKey(Window, GLFW_KEY_F11) == GLFW_PRESS){
+        if(!F11Pressed){ //OneClick
+            F11Pressed = true;
+            //Togle Fullscreen
+            FullScreen = !FullScreen;
+            //Get Monitor Params
+            GLFWmonitor* Monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
+            if(FullScreen){// Set Fullscreen Window
+                glfwSetWindowMonitor(Window, Monitor, 0, 0, Mode->width, Mode->height, RefreshRate); 
+
+            }else{ //Set Not Fullscreen Window
+                //Set Window Size
+                WindowWidth = 1000;
+                WindowHeight = 900;
+                glfwSetWindowMonitor(Window, NULL, (Mode->width - WindowWidth)/2, (Mode->height - WindowHeight)/2, WindowWidth, WindowHeight, RefreshRate); 
+            
+            }
+
+        }
+    }else F11Pressed = false;
+
 }
 
 void GraphicEngine::SaveWindowParams(GLFWwindow* Window){
-    //Save Window Size
+    //Get Window Sizes
     glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
-    Data::Array WindowSettings = Data::Array("Settings", 5);
+    //Open Settings File
+    Data::Array WindowSettings = Data::Array("Settings", 4);
     WindowSettings.Read("Window");
-    WindowSettings.Content[2] = std::to_string(WindowWidth);
-    WindowSettings.Content[3] = std::to_string(WindowHeight);
+    //Set New Window Size
+    WindowSettings.Content[1] = std::to_string(WindowWidth);
+    WindowSettings.Content[2] = std::to_string(WindowHeight);
+    //Save File
     WindowSettings.Save("Window");
     Log.MESSAGE("Window Size Saved");
 
