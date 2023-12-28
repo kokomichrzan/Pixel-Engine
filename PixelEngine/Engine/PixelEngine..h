@@ -5,23 +5,23 @@
 #include <filesystem>
 //Programs
 #include "GraphicEngine.h"
-#include "Scripts.h"
+#include "Gui.h"
+#include "Data.h"
 #include "LOG.h"
 
 class PixelEngine
 {
-private:
+private: //Programs
     LOG Log = LOG();
+
+private: //Varibles
     int Width, Height;
-    double MouseLastX, MouseLastY, MouseX, MouseY;
-    bool GetPoses = true;
-    int WindowLastX, WindowLastY;
     const std::filesystem::path ExecutePath = std::filesystem::current_path();
     const std::string WindowTitle = "Pixel Engine";
     GLFWwindow* Window;
 
-
-public:
+public: //Functions
     PixelEngine(/* args */);
     ~PixelEngine();
+
 };

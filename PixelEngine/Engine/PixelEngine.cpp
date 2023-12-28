@@ -3,7 +3,8 @@
 PixelEngine::PixelEngine()
 {
     //Create Window / UI
-    Window = GraphicEngine::Create(WindowTitle);
+    GraphicEngine Graphics = GraphicEngine();
+    Window = Graphics.CreateWindow(WindowTitle);
     GUI UI = GUI(Window);
 
     //Get Assets
@@ -20,16 +21,8 @@ PixelEngine::PixelEngine()
         //Render GUI
         UI.Render();
 
-        //Move
-        glfwGetCursorPos(Window, &MouseX, &MouseY);
-        if((glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && MouseY < 50){
-            if(GetPoses) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-            glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
-            GetPoses = false;
-            glfwSetWindowPos(Window, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
-            glfwSetCursorPos(Window, MouseLastX, MouseLastY);
-        }
-        else GetPoses = true;
+        //Move Window
+        Graphics.Move(Window);
 
         //Poll Event And Swap Buffer
         glfwPollEvents();
@@ -51,5 +44,4 @@ PixelEngine::~PixelEngine()
     //Destroy Window
     glfwDestroyWindow(Window);
     glfwTerminate();
-    
 }

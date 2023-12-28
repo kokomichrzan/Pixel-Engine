@@ -7,7 +7,7 @@ static std::string LOGDATA;
 
 class LOG
 {
-public:
+public: //Methodes
     void WARNING(const std::string& Value);
     void INFO(const std::string& Value);
     void MESSAGE(const std::string& Value);
