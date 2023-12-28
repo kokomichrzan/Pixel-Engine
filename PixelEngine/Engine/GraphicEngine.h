@@ -14,11 +14,14 @@ private: //Programs
     LOG Log = LOG();
 private: //Varibles
     double MouseLastX, MouseLastY, MouseX, MouseY;
-    bool GetPoses = true;
+    bool GetPoses = true, GetResize = true, ResizeLeftLock = false, ResizeRightLock = false, ResizeTopLock = false, ResizeBottomLock = false, MoveLock = false;
     int WindowLastX, WindowLastY;
+    int WindowWidth, WindowHeight;
+    const int EventSize = 10;
 
-private: // Window Events
+private: // Window Behavior
     void Move(GLFWwindow* Window);
+    void Resize(GLFWwindow* Window);
 
 private: //Settings
     struct Settings{

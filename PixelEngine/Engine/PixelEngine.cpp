@@ -16,7 +16,7 @@ PixelEngine::PixelEngine()
         //Render GUI
         UI.Render();
 
-        //Move Window
+        //Events Window
         Graphics.Events(Window);
 
         //Poll Event And Swap Buffer

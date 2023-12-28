@@ -72,7 +72,7 @@ GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
     
     //Set Prop
     glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2); //Set Window Position
-    glfwSetWindowSizeLimits(Window, 1000, 700, GLFW_DONT_CARE, GLFW_DONT_CARE); //Set Window MinSize
+    glfwSetWindowSizeLimits(Window, 1000, 900, GLFW_DONT_CARE, GLFW_DONT_CARE); //Set Window MinSize
 
     //Set Context
     glfwMakeContextCurrent(Window);
@@ -87,21 +87,91 @@ GLFWwindow* GraphicEngine::CreateWindow(const std::string& WindowTitle)
 }
 
 void GraphicEngine::Events(GLFWwindow* Window){
-
+    Resize(Window);
     Move(Window);
 
 }
 
 void GraphicEngine::Move(GLFWwindow* Window){
-    //Move
     glfwGetCursorPos(Window, &MouseX, &MouseY);
-    if((glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) && MouseY < 50){
-        if(GetPoses) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
-        glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
-        GetPoses = false;
-        glfwSetWindowPos(Window, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
-        glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+    glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
+    if(((MouseY < 30 && MouseY > EventSize) || MoveLock) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){
+        if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+            if(GetPoses) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+            GetPoses = false;
+            MoveLock = true;
+            glfwSetWindowPos(Window, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
+            glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+        }
+        else {GetPoses = true; MoveLock= false;};
     }
-    else GetPoses = true;
 }
     
+void GraphicEngine::Resize(GLFWwindow* Window){
+    //Get Data
+    glfwGetCursorPos(Window, &MouseX, &MouseY);
+    glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
+    glfwGetWindowPos(Window, &WindowLastX, &WindowLastY);
+
+    if(!MoveLock)
+    {
+        //Left
+        if(((MouseX < EventSize && MouseY > 30 && (MouseY < (WindowHeight - EventSize))) || ResizeLeftLock) && !(ResizeTopLock || ResizeBottomLock || ResizeRightLock)) {
+            //Resize
+            if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    GetResize = false;
+                    ResizeLeftLock = true;
+                    if((WindowWidth - (MouseX - MouseLastX)) >= 1000) {
+                        glfwSetWindowPos(Window, int(WindowLastX + (MouseX - MouseLastX)), WindowLastY);
+                        glfwSetWindowSize(Window, int(WindowWidth - (MouseX - MouseLastX)), WindowHeight);
+                        glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+                    }
+                } else {GetResize = true; ResizeLeftLock = false;};
+            }
+
+        //Right
+        if(((MouseX > (WindowWidth - EventSize) && MouseY > 30 && (MouseY < (WindowHeight - EventSize))) || ResizeRightLock) && !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock)){ 
+            //Resize
+            if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    GetResize = false;
+                    ResizeRightLock = true;
+                    if(MouseX >= 1000) glfwSetWindowSize(Window, int(MouseX), WindowHeight);
+                } else {GetResize = true; ResizeRightLock = false;};
+        }
+
+        //Top
+        if(((MouseY < EventSize || ResizeTopLock)) && !(ResizeBottomLock || ResizeLeftLock || ResizeRightLock)){ 
+            //Resize
+            if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    GetResize = false;
+                    ResizeTopLock = true;
+                    if((WindowHeight - (MouseY - MouseLastY)) >= 900) {
+                        glfwSetWindowPos(Window, WindowLastX, int(WindowLastY + (MouseY - MouseLastY)));
+                        glfwSetWindowSize(Window, WindowWidth, int(WindowHeight - (MouseY - MouseLastY)));
+                        glfwSetCursorPos(Window, MouseLastX, MouseLastY);
+                    }
+                } else {GetResize = true; ResizeTopLock = false;};
+        }
+
+        //Bottom
+        if((MouseY > (WindowHeight - EventSize) || ResizeBottomLock) && !(ResizeTopLock || ResizeLeftLock || ResizeRightLock)){ 
+            //Resize
+            if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+                if(GetResize) {glfwGetCursorPos(Window, &MouseLastX, &MouseLastY); }
+                    GetResize = false;
+                    ResizeBottomLock = true;
+                    if(MouseY >= 900) glfwSetWindowSize(Window, WindowWidth, int(MouseY));
+                } else {GetResize = true; ResizeBottomLock = false;};
+        }
+        
+        //Check MinSize
+        if(WindowWidth < 1000) glfwSetWindowSize(Window, 1000, WindowHeight);
+        if(WindowHeight < 900) glfwSetWindowSize(Window, WindowWidth, 900);
+        //SetGLad
+        glViewport(0,0, WindowWidth, WindowHeight);
+
+    }
+}
