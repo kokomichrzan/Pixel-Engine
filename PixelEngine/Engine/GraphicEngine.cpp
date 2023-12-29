@@ -13,7 +13,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
         SettingsData.Content[3] = std::to_string(WindowSettings.RefreshRate);
 
         SettingsData.Save("Window");
-        Log.INFO("Create Window Settings");
+        Log.MESSAGE("Create Window Settings");
 
     }else{
         WindowSettings.FullScreen =     std::stoi(SettingsData.Content[0]);
@@ -21,7 +21,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
         WindowSettings.Height =         std::stoi(SettingsData.Content[2]);
         WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[3]);
 
-        Log.INFO("Loaded Window Settings");
+        Log.MESSAGE("Loaded Window Settings");
     }
 
     //Init Window
@@ -37,9 +37,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
 
     //Refresh Rate
     if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
-    Log.INFO("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
+    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
     else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); 
-    Log.INFO("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
+    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
     
     //Set Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -54,19 +54,19 @@ GLFWwindow* GraphicEngine::CreateWindow()
         WindowSettings.Width = Mode->width;
         WindowSettings.Height = Mode->height;
     }
-    Log.INFO("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
+    Log.MESSAGE("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
 
     //Create Window
     GLFWwindow* Window;
     if(WindowSettings.FullScreen)
     {
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
-        Log.INFO("Create Full Screen Window");
+        Log.MESSAGE("Create Full Screen Window");
     }
     else
     {
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
-        Log.INFO("Create Window");
+        Log.MESSAGE("Create Window");
     }
     if(!Window) Log.WARNING("Can not Create Window");
     
@@ -80,7 +80,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
     //Set Glad
     gladLoadGL();
     glad_glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
-    Log.INFO("Loaded GLAD");
+    Log.MESSAGE("Loaded GLAD");
 
     return Window;
     
