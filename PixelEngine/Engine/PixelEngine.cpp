@@ -1,10 +1,9 @@
 #include "PixelEngine..h"
 
 PixelEngine::PixelEngine()
+    :Graphics(new GraphicEngine()), Window(Graphics->CreateWindow())
 {
-    //Create Window And UI
-    Graphics = new GraphicEngine();
-    Window = Graphics->CreateWindow();
+    //Create UI
     GUI UI = GUI(Window);
     
     //While Loop

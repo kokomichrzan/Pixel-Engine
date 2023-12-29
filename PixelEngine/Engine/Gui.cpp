@@ -3,10 +3,8 @@
 //############################## GUI ##############################//
 
 GUI::GUI(GLFWwindow* WindowPtr)
+    :Window(WindowPtr)
 {
-    //Set Window Ptr
-    Window = WindowPtr;
-
     // Setup Dear ImGui Context And Flags
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -173,11 +171,8 @@ void GUI::DeleteSubWindow(const unsigned int& ID){
 
 //############################## Elements ##############################//
 
-Element::Element(const unsigned int& GetID, const unsigned int& GetType){
-    ID = GetID;
-    Type = GetType;
-
-}
+Element::Element(const unsigned int& GetID, const unsigned int& GetType) 
+    :ID(GetID), Type(GetType) {}
 
 void Element::Render(){
     //Create Window
