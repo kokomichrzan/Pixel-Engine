@@ -1,30 +1,23 @@
 #include "LOG.h"
 
+std::string LOG::LogData;
+bool LOG::ScrollDown;
+
 //Add Log
 void LOG::WARNING(const std::string& Value){
-    LogData += "[WARNING] " + Value + "\n";
-    ScrollDown = true;
+    LOG::LogData += "[WARNING] " + Value + "\n";
+    LOG::ScrollDown = true;
 
 }
 
 void LOG::INFO(const std::string& Value){
-    LogData += "[INFO] " + Value + "\n";
-    ScrollDown = true;
+    LOG::LogData += "[INFO] " + Value + "\n";
+    LOG::ScrollDown = true;
 
 }
 
 void LOG::MESSAGE(const std::string& Value){
-    LogData += "[MESSAGE] " + Value + "\n";
-    ScrollDown = true;
-
-}
-
-//GetLog
-const std::string& LOG::GetLog() {return LogData;}
-
-bool LOG::CheckIfScrollDown(){
-    bool CurrentScrollDownState = ScrollDown;
-    ScrollDown = false;
-    return CurrentScrollDownState;
+    LOG::LogData += "[MESSAGE] " + Value + "\n";
+    LOG::ScrollDown = true;
 
 }

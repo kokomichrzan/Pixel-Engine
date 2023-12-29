@@ -211,8 +211,11 @@ void Element::Render(){
 //Elements Types
 
 void Element::LogElement(){
-    ImGui::Text(Log.GetLog().c_str());
-    if(Log.CheckIfScrollDown())ImGui::SetScrollHereY(1.0f);
+    ImGui::Text(LOG::LogData.c_str());
+    if(LOG::ScrollDown){
+        ImGui::SetScrollHereY(1.0f);
+        LOG::ScrollDown = false;
+    }
 
 }
 
