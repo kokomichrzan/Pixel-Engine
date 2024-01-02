@@ -24,7 +24,7 @@ GUI::GUI(GLFWwindow* WindowPtr)
     Data::Vector GuiLoad = Data::Vector("Settings");
     GuiLoad.Read("Gui");
     for(int Count = 0; Count < GuiLoad.Content.size() - 1; Count += 2){
-        Element* LoadSubWindow = new Element(std::stoi(GuiLoad.Content[Count]), std::stoi(GuiLoad.Content[Count + 1]));
+        Element* LoadSubWindow = new Element(std::stoi(GuiLoad.Content[Count]), Window, std::stoi(GuiLoad.Content[Count + 1]));
         SubWindows.push_back(LoadSubWindow);
 
     }
@@ -89,7 +89,8 @@ void GUI::Render(){
         if(ImGui::BeginMenu("Window")){
             if(ImGui::MenuItem("New")){ CreateNewSubWindow(); };
             if(ImGui::MenuItem("Log")){ CreateNewSubWindow(1); };
-            if(ImGui::MenuItem("Assets")){ CreateNewSubWindow(2); };
+            if(ImGui::MenuItem("System")){ CreateNewSubWindow(2); };
+            if(ImGui::MenuItem("Assets")){ CreateNewSubWindow(3); };
         ImGui::EndMenu();
         }
 
@@ -156,7 +157,7 @@ void GUI::CreateNewSubWindow(const unsigned int& Type){
     }
     
     //Create New Window
-    Element* NewWindow = new Element(ID, Type);
+    Element* NewWindow = new Element(ID, Window, Type);
     SubWindows.push_back(NewWindow);
     Log.INFO("Created New Sub Window with ID " + std::to_string(ID));
 
@@ -171,8 +172,8 @@ void GUI::DeleteSubWindow(const unsigned int& ID){
 
 //############################## Elements ##############################//
 
-Element::Element(const unsigned int& GetID, const unsigned int& GetType) 
-    :ID(GetID), Type(GetType) {}
+Element::Element(const unsigned int& GetID, GLFWwindow* Window, const unsigned int& GetType) 
+    :ID(GetID), Window(Window), Type(GetType) {}
 
 void Element::Render(){
     //Create Window
@@ -184,7 +185,8 @@ void Element::Render(){
         if(ImGui::BeginMenu("Type")){
             if(ImGui::MenuItem("None")) Type = 0;
             if(ImGui::MenuItem("Log")) Type = 1;
-            if(ImGui::MenuItem("Assets")) Type = 2;
+            if(ImGui::MenuItem("System")) Type = 2;
+            if(ImGui::MenuItem("Assets")) Type = 3;
         ImGui::EndMenu();
         }
         if(ImGui::MenuItem("Exit")) RenderElement = false;
@@ -195,7 +197,8 @@ void Element::Render(){
     {
         case 0: break; //Clear Window
         case 1: LogElement(); break; //Log Element
-        case 2: AssetsElement(); break; //Assets Element
+        case 2: SystemElement(); break; //System Element
+        case 3: AssetsElement(); break; //System Element
     }
 
     ImGui::End();
@@ -214,10 +217,30 @@ void Element::LogElement(){
         ImGui::SetScrollHereY(1.0f);
         LOG::ScrollDown = false;
     }
+}
 
+void Element::SystemElement(){
+    //Resolution
+    glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
+    std::string Resolution = "Resolution: " + std::to_string(WindowWidth) + " x " + std::to_string(WindowHeight);
+    ImGui::Text(Resolution.c_str());
+
+    //get microseconds
+    end =  std::chrono::high_resolution_clock::now();
+    std::chrono::duration μsDuration = end - start;
+    std::chrono::microseconds μs = std::chrono::duration_cast<std::chrono::microseconds>(μsDuration);
+    start = std::chrono::high_resolution_clock::now();
+
+    //Print microsecends
+    ImGui::Text(("qs: " + std::to_string(μs.count())).c_str());
+    //Print ms
+    float ms = μs.count() * 1000.0f;
+    ImGui::Text(("ms: " + std::to_string(ms)).c_str());
+    //Print FPS
+    float FPS = 1000000.0f / μs.count();
+    ImGui::Text(std::string("FPS: " + std::to_string(FPS)).c_str());
 }
 
 void Element::AssetsElement(){
-
 
 }
