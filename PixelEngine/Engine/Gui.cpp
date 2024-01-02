@@ -206,7 +206,10 @@ void Element::Render(){
 //Elements Types
 
 void Element::LogElement(){
-    ImGui::Text(LOG::LogData.c_str());
+    for(std::string Line : LOG::LogData){
+        ImGui::Text(Line.c_str());
+    };
+
     if(LOG::ScrollDown){
         ImGui::SetScrollHereY(1.0f);
         LOG::ScrollDown = false;

@@ -1,11 +1,11 @@
 #pragma once
-//LIBs
-#include <string>
+//PCH
+#include <pch.h>
 
 class LOG
 {
 public: //Varibles
-    static std::string LogData;
+    static std::vector<std::string> LogData;
     static bool ScrollDown;
 
 public: //Add Log

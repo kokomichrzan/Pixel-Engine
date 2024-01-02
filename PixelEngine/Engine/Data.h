@@ -1,7 +1,6 @@
 #pragma once
-#include <fstream>
-#include <filesystem>
-#include <vector>
+//PCH
+#include <pch.h>
 
 //############################################## Data ##############################################//
 

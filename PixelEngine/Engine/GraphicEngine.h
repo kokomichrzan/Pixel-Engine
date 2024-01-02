@@ -1,7 +1,6 @@
 #pragma once
-//LIBs
-#include <GLAD/glad.h>
-#include <GLFW/glfw3.h>
+//PCH
+#include <pch.h>
 //Programs
 #include "Data.h"
 #include "LOG.h"

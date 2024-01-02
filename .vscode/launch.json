@@ -7,7 +7,7 @@
         "name": "GDB",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}\\Product\\Debug.exe",
+        "program": "${workspaceFolder}\\Product\\Debug\\Debug.exe",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}\\Product",
