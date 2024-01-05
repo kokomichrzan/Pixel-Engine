@@ -1,6 +1,7 @@
 #pragma once
-//PCH
-#include <pch.h>
+//Libs
+#include <vector>
+#include <string>
 
 class LOG
 {

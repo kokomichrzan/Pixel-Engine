@@ -1,9 +1,14 @@
 #pragma once
-//PCH
-#include <pch.h>
+//Libs
+#include "GLAD/glad.h"
+#include "GLFW/glfw3.h"
+#include <vector>
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_glfw.h"
+#include "ImGui/imgui_impl_opengl3.h"
 //Programs
 #include "LOG.h"
-#include "Data.h"
+#include "Data/Data.h"
 
 //############################## GUI ##############################//
 

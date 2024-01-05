@@ -1,8 +1,10 @@
 #pragma once
-//PCH
-#include <pch.h>
+//Libs
+#include "GLAD/glad.h"
+#include "GLFW/glfw3.h"
+#include <string>
 //Programs
-#include "Data.h"
+#include "Data/Data.h"
 #include "LOG.h"
 
 class GraphicEngine
