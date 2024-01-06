@@ -1,7 +1,7 @@
 #include "PixelEngine..h"
 
 PixelEngine::PixelEngine()
-    :Graphics(new GraphicEngine()), Window(Graphics->CreateWindow())
+    :Graphics(GraphicEngine()), Window(Graphics.CreateWindow()) //[OPTIMIZE]
 {
     //Create UI
     GUI UI = GUI(Window);
@@ -16,31 +16,29 @@ PixelEngine::PixelEngine()
         UI.Render();
 
         //Events Window
-        Graphics->Events(Window);
+        Graphics.Events(Window);
 
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);
     }
 
-}
-
-PixelEngine::~PixelEngine()
-{
     //Save Window Params
-    Graphics->SaveWindowParams(Window);
-
-    //Remove Graphics
-    delete Graphics;
+    Graphics.SaveWindowParams(Window);
 
     //Destroy Window
     glfwDestroyWindow(Window);
     glfwTerminate();
-
 }
 
-
+#ifdef _DEBUG
 int main() {
     PixelEngine App = PixelEngine();
     return 0;
 }
+#else
+int WinMain() {
+    PixelEngine App = PixelEngine();
+    return 0;
+}
+#endif

@@ -47,7 +47,10 @@ public: //Element Params
     unsigned int Type = 0;
     unsigned int ID = 0;
     bool RenderElement = true;
+
+private:
     GLFWwindow* Window;
+    std::string WindowTitle;
 
 private: //Element Type Data
     //LogElement

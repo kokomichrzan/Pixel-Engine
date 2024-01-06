@@ -39,7 +39,8 @@ GLFWwindow* GraphicEngine::CreateWindow()
     if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
     Log.MESSAGE("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
     else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); 
-    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
+    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));
+    }
     
     //Set Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -54,6 +55,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
         WindowSettings.Width = Mode->width;
         WindowSettings.Height = Mode->height;
     }
+    //Set Min Sizes
+    if (WindowSettings.Width < 1000) WindowSettings.Width = 1000;
+    if (WindowSettings.Height < 900) WindowSettings.Height = 900;
     Log.MESSAGE("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
 
     //Create Window

@@ -5,20 +5,17 @@ bool LOG::ScrollDown;
 
 //Add Log
 void LOG::WARNING(const std::string& Value){
-    LogData.emplace_back("[WARNING] " + Value + "\n");
+    LogData.emplace_back("[WARNING] " + Value);
     LOG::ScrollDown = true;
-
 }
 
 void LOG::MESSAGE(const std::string& Value){
-    LogData.emplace_back("[MESSAGE] " + Value + "\n");
+    LogData.emplace_back("[MESSAGE] " + Value);
     LOG::ScrollDown = true;
-
 }
 
 void LOG::INFO(const std::string& Value){
-    LogData.emplace_back("[INFO] " + Value + "\n");
+    LogData.emplace_back("[INFO] " + Value);
     LOG::ScrollDown = true;
-
 }
 

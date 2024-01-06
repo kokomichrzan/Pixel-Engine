@@ -173,13 +173,12 @@ void GUI::DeleteSubWindow(const unsigned int& ID){
 //############################## Elements ##############################//
 
 Element::Element(const unsigned int& GetID, GLFWwindow* Window, const unsigned int& GetType) 
-    :ID(GetID), Window(Window), Type(GetType) {}
+    :ID(GetID), Window(Window), Type(GetType), WindowTitle("Window " + std::to_string(ID)) {}
 
 void Element::Render(){
     //Create Window
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
-    ImGui::Begin(("Window " + std::to_string(ID)).c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar);
-    
+    ImGui::Begin(WindowTitle.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar);
     //Title Bar
     ImGui::BeginMenuBar();
         if(ImGui::BeginMenu("Type")){
@@ -209,7 +208,7 @@ void Element::Render(){
 //Elements Types
 
 void Element::LogElement(){
-    for(std::string Line : LOG::LogData){
+    for(const std::string& Line : LOG::LogData){
         ImGui::Text(Line.c_str());
     };
 
@@ -228,17 +227,19 @@ void Element::SystemElement(){
     //get microseconds
     end =  std::chrono::high_resolution_clock::now();
     std::chrono::duration μsDuration = end - start;
-    std::chrono::microseconds μs = std::chrono::duration_cast<std::chrono::microseconds>(μsDuration);
+    std::chrono::microseconds qs = std::chrono::duration_cast<std::chrono::microseconds>(μsDuration);
     start = std::chrono::high_resolution_clock::now();
 
     //Print microsecends
-    ImGui::Text(("qs: " + std::to_string(μs.count())).c_str());
+    std::string qsTime = "Qs: " + std::to_string(qs.count());
+    ImGui::Text(qsTime.c_str());
     //Print ms
-    float ms = μs.count() * 1000.0f;
-    ImGui::Text(("ms: " + std::to_string(ms)).c_str());
+    std::string msText = "Ms: " + std::to_string(qs.count() / 1000);
+    ImGui::Text(msText.c_str());
     //Print FPS
-    float FPS = 1000000.0f / μs.count();
-    ImGui::Text(std::string("FPS: " + std::to_string(FPS)).c_str());
+    int FPS = 1000000 / qs.count();
+    std::string FPSText = "FPS: " + std::to_string(FPS);
+    ImGui::Text(FPSText.c_str());
 }
 
 void Element::AssetsElement(){
