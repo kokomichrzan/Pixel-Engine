@@ -1,4 +1,0 @@
-[submodule "PixelEngine/Dependencies/Include/Data"]
-	path = PixelEngine/Dependencies/Include/Data
-	url = https://github.com/kokomichrzan/CPP-Data
-	branch = Code
