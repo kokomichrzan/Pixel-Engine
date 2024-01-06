@@ -16,7 +16,6 @@ private:
     };
 
 private:
-    LOG Log = LOG();
     const std::string WindowTitle = "Pixel Engine";
     double MouseLastX, MouseLastY, MouseX, MouseY;
     int WindowLastX, WindowLastY, WindowWidth, WindowHeight,

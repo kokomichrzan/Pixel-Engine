@@ -12,7 +12,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
         SettingsData.Content[3] = std::to_string(WindowSettings.RefreshRate);
 
         SettingsData.Save("Window");
-        Log.MESSAGE("Create Window Settings");
+        LOG::MESSAGE("Create Window Settings");
 
     }else{
         WindowSettings.FullScreen =     std::stoi(SettingsData.Content[0]);
@@ -20,7 +20,7 @@ GLFWwindow* GraphicEngine::CreateWindow()
         WindowSettings.Height =         std::stoi(SettingsData.Content[2]);
         WindowSettings.RefreshRate =    std::stoi(SettingsData.Content[3]);
 
-        Log.MESSAGE("Loaded Window Settings");
+        LOG::MESSAGE("Loaded Window Settings");
     }
 
     glfwInit();
@@ -32,9 +32,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
     const GLFWvidmode* Mode = glfwGetVideoMode(Monitor);
 
     if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
-    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
+    LOG::MESSAGE("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
     else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); 
-    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));
+    LOG::MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));
     }
     
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -48,20 +48,20 @@ GLFWwindow* GraphicEngine::CreateWindow()
     }
     if (WindowSettings.Width < 1000) WindowSettings.Width = 1000;
     if (WindowSettings.Height < 900) WindowSettings.Height = 900;
-    Log.MESSAGE("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
+    LOG::MESSAGE("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
 
     GLFWwindow* Window;
     if(WindowSettings.FullScreen)
     {
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
-        Log.MESSAGE("Create Full Screen Window");
+        LOG::MESSAGE("Create Full Screen Window");
     }
     else
     {
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), NULL, NULL);
-        Log.MESSAGE("Create Window");
+        LOG::MESSAGE("Create Window");
     }
-    if(!Window) Log.WARNING("Can not Create Window");
+    if(!Window) LOG::WARNING("Can not Create Window");
     
     glfwSetWindowPos(Window, (Mode->width - WindowSettings.Width)/2, (Mode->height - WindowSettings.Height)/2); //Set Window Position
     glfwSetWindowSizeLimits(Window, 1000, 900, GLFW_DONT_CARE, GLFW_DONT_CARE); //Set Window MinSize
@@ -69,9 +69,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
 
     gladLoadGL();
     glad_glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
-    Log.MESSAGE("Loaded GLAD");
+    LOG::MESSAGE("Loaded GLAD");
 
-    Log.INFO("Window Created");
+    LOG::INFO("Window Created");
     return Window;
 }
 
@@ -207,5 +207,5 @@ void GraphicEngine::SaveWindowParams(GLFWwindow* Window){
     WindowSettings.Content[1] = std::to_string(WindowWidth);
     WindowSettings.Content[2] = std::to_string(WindowHeight);
     WindowSettings.Save("Window");
-    Log.MESSAGE("Window Size Saved");
+    LOG::MESSAGE("Window Size Saved");
 }

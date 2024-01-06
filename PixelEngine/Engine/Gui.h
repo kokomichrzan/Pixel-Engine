@@ -16,7 +16,6 @@ class Element;
 class GUI
 {
 private:
-    LOG Log = LOG();
     GLFWwindow* Window;
     std::vector<Element*> SubWindows; 
     ImVec2 BTNSize = ImVec2(30, 30);
@@ -48,8 +47,6 @@ private:
     std::string WindowTitle;
 
 private:
-    //LogElement
-    LOG Log = LOG();
     //SystemElement
     int WindowWidth, WindowHeight;
     std::chrono::time_point<std::chrono::high_resolution_clock> start;

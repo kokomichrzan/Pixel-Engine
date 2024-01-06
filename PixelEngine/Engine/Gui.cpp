@@ -24,7 +24,7 @@ GUI::GUI(GLFWwindow* WindowPtr)
         SubWindows.push_back(LoadSubWindow);
 
     }
-    Log.MESSAGE("GUI Loaded");
+    LOG::MESSAGE("GUI Loaded");
 }
 
 GUI::~GUI()
@@ -39,7 +39,7 @@ GUI::~GUI()
         
     }
     GuiSave.Save("Gui");
-    Log.MESSAGE("GUI Saved");
+    LOG::MESSAGE("GUI Saved");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -136,11 +136,11 @@ void GUI::CreateNewSubWindow(const unsigned int& Type){
     
     Element* NewWindow = new Element(ID, Window, Type);
     SubWindows.push_back(NewWindow);
-    Log.INFO("Created New Sub Window with ID " + std::to_string(ID));
+    LOG::INFO("Created New Sub Window with ID " + std::to_string(ID));
 }
 
 void GUI::DeleteSubWindow(const unsigned int& ID){
-    Log.INFO("Removed Sub Window with ID " + std::to_string(SubWindows[ID]->ID));
+    LOG::INFO("Removed Sub Window with ID " + std::to_string(SubWindows[ID]->ID));
     delete SubWindows[ID];
     SubWindows.erase(std::next(SubWindows.begin(), ID));
 }
