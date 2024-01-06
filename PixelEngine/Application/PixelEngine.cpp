@@ -1,14 +1,11 @@
 #include "PixelEngine..h"
 
-//void* operator new(size_t size) {
-//
-//    return malloc(size);
-//}
-
 PixelEngine::PixelEngine()
-    :Graphics(GraphicEngine(Window)), 
-    UI(GUI(Window))
+    :Graphics(new GraphicEngine()), Window(Graphics->CreateWindow())
 {
+    //Create UI
+    GUI UI = GUI(Window);
+    
     //While Loop
     while(!(glfwWindowShouldClose(Window) || UI.WindowShouldClose)){
         //Set Background Color
@@ -19,17 +16,27 @@ PixelEngine::PixelEngine()
         UI.Render();
 
         //Events Window
-        Graphics.Events(Window);
+        Graphics->Events(Window);
 
         //Poll Event And Swap Buffer
         glfwPollEvents();
         glfwSwapBuffers(Window);
     }
 
+}
+
+PixelEngine::~PixelEngine()
+{
+    //Save Window Params
+    Graphics->SaveWindowParams(Window);
+
+    //Remove Graphics
+    delete Graphics;
+
     //Destroy Window
     glfwDestroyWindow(Window);
     glfwTerminate();
-    Graphics.SaveWindowParams(Window);
+
 }
 
 

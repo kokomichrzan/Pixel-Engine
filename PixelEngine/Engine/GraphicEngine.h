@@ -21,7 +21,6 @@ private: //Programs
     LOG Log = LOG();
     
 private: //Varibles
-    GLFWwindow* Window;
     const std::string WindowTitle = "Pixel Engine";
     double MouseLastX, MouseLastY, MouseX, MouseY;
     int WindowLastX, WindowLastY, WindowWidth, WindowHeight,
@@ -38,9 +37,8 @@ private: // Window Behavior
     void ToggleFullscreen(GLFWwindow* Window);
 
 public: //Functions
-    GraphicEngine(GLFWwindow* Window);
+    GLFWwindow* CreateWindow();
     void Events(GLFWwindow* Window);
     void SaveWindowParams(GLFWwindow* Window);
-    ~GraphicEngine();
 
 };

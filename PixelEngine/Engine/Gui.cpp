@@ -2,8 +2,8 @@
 
 //############################## GUI ##############################//
 
-GUI::GUI(GLFWwindow* Window)
-    :Window(Window)
+GUI::GUI(GLFWwindow* WindowPtr)
+    :Window(WindowPtr)
 {
     // Setup Dear ImGui Context And Flags
     IMGUI_CHECKVERSION();
@@ -159,12 +159,12 @@ void GUI::CreateNewSubWindow(const unsigned int& Type){
     //Create New Window
     Element* NewWindow = new Element(ID, Window, Type);
     SubWindows.push_back(NewWindow);
-    Log.INFO("Created New Sub Window with ID " + ID);
+    Log.INFO("Created New Sub Window with ID " + std::to_string(ID));
 
 }
 
 void GUI::DeleteSubWindow(const unsigned int& ID){
-    Log.INFO("Removed Sub Window with ID " + SubWindows[ID]->ID);
+    Log.INFO("Removed Sub Window with ID " + std::to_string(SubWindows[ID]->ID));
     delete SubWindows[ID];
     SubWindows.erase(std::next(SubWindows.begin(), ID));
 
