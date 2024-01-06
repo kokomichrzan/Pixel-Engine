@@ -56,6 +56,9 @@
     <ClInclude Include="Include\GLFW\glfw3native.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Include\KHR\khrplatform.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
     <ClInclude Include="Include\ImGui\imconfig.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
@@ -81,9 +84,6 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Include\ImGui\imstb_truetype.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\KHR\khrplatform.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>

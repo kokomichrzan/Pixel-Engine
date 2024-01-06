@@ -1,3 +1,4 @@
+#include <pch.h>
 #include "LOG.h"
 
 std::vector<std::pair<ImVec4, std::string>> LOG::LogData;

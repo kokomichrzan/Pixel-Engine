@@ -1,9 +1,6 @@
 #pragma once
-#include "GLAD/glad.h"
-#include "GLFW/glfw3.h"
-#include <string>
 #include "Data/Data.h"
-#include "../LOG.h"
+#include "../Scripts/LOG.h"
 
 namespace PE {
 
@@ -34,7 +31,6 @@ namespace PE {
     public:
         Window();
         ~Window();
-        void Render();
         GLFWwindow* HWindow;
         void Events();
         void SaveWindowParams();

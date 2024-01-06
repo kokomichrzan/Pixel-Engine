@@ -59,6 +59,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)PixelEngine\Dependencies\Include;$(SolutionDir)PixelEngine\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -75,6 +77,8 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)PixelEngine\Dependencies\Include;$(SolutionDir)PixelEngine\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,8 +88,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Include\Data\Data.cpp" />
-    <ClCompile Include="Include\GLAD\glad.c" />
     <ClCompile Include="Include\ImGui\imgui.cpp" />
     <ClCompile Include="Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Include\ImGui\imgui_draw.cpp" />
@@ -93,12 +95,10 @@
     <ClCompile Include="Include\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Include\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Include\Data\Data.cpp" />
+    <ClCompile Include="Include\GLAD\glad.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Data\Data.h" />
-    <ClInclude Include="Include\GLAD\glad.h" />
-    <ClInclude Include="Include\GLFW\glfw3.h" />
-    <ClInclude Include="Include\GLFW\glfw3native.h" />
     <ClInclude Include="Include\ImGui\imconfig.h" />
     <ClInclude Include="Include\ImGui\imgui.h" />
     <ClInclude Include="Include\ImGui\imgui_impl_glfw.h" />
@@ -108,6 +108,10 @@
     <ClInclude Include="Include\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Include\ImGui\imstb_textedit.h" />
     <ClInclude Include="Include\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Include\Data\Data.h" />
+    <ClInclude Include="Include\GLAD\glad.h" />
+    <ClInclude Include="Include\GLFW\glfw3.h" />
+    <ClInclude Include="Include\GLFW\glfw3native.h" />
     <ClInclude Include="Include\KHR\khrplatform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

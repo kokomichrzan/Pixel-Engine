@@ -1,9 +1,7 @@
 #pragma once
-#include "GLAD/glad.h"
-#include "GLFW/glfw3.h"
+#include <pch.h>
 #include "Graphic/Window.h"
 #include "Graphic/Gui.h"
-#include <future>
 
 namespace PE {
 

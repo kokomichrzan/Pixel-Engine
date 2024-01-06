@@ -1,8 +1,3 @@
 Product/
-x64/
-Models/
-Settings/
-Texture/
-Materials/
-*.ini
+bin/
 .vs/
