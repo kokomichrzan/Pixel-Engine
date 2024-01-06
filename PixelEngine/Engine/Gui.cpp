@@ -5,7 +5,6 @@
 GUI::GUI(GLFWwindow* WindowPtr)
     :Window(WindowPtr)
 {
-    // Setup Dear ImGui Context And Flags
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -13,14 +12,11 @@ GUI::GUI(GLFWwindow* WindowPtr)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
 
-    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
-    //Set ImGui GLFW and GLAD
     ImGui_ImplGlfw_InitForOpenGL(Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    //Load SubWindows
     Data::Vector GuiLoad = Data::Vector("Settings");
     GuiLoad.Read("Gui");
     for(int Count = 0; Count < GuiLoad.Content.size() - 1; Count += 2){
@@ -29,26 +25,22 @@ GUI::GUI(GLFWwindow* WindowPtr)
 
     }
     Log.MESSAGE("GUI Loaded");
-
 }
 
 GUI::~GUI()
 {
-    //Save And Delete Sub Windows
     Data::Vector GuiSave = Data::Vector("Settings");
     for(int Count = 0; Count < SubWindows.size(); Count++){
         //Save Window ID and Type
         GuiSave.Add(std::to_string(SubWindows[Count]->ID));
         GuiSave.Add(std::to_string(SubWindows[Count]->Type));
 
-        //Delete Sub Window
         delete SubWindows[Count];
         
     }
     GuiSave.Save("Gui");
     Log.MESSAGE("GUI Saved");
 
-    //Shut Down ImGui
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -56,17 +48,14 @@ GUI::~GUI()
 }
 
 void GUI::Render(){
-    // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    //Create MainWindow
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0,0,0,0));
     ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground );
     
-    //Create Dockspace
     glfwGetWindowSize(Window, &WindowWidth, &WindowHeight);
     ImGui::SetWindowPos(ImVec2(0,30));
     ImGui::SetWindowSize(ImVec2(WindowWidth, WindowHeight - 30));
@@ -125,49 +114,35 @@ void GUI::Render(){
     ImGui::PopStyleColor();
     ImGui::PopStyleVar();
 
-    //Render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     GLFWwindow* BackUPContext = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
     glfwMakeContextCurrent(BackUPContext);
-
 }
 
-//Gui Events
 void GUI::CreateNewSubWindow(const unsigned int& Type){
-    //Create Unique ID
     unsigned int ID;
     bool Findet = false;
     while (!Findet)
     {
-        //Set Seed And Get Random
         srand((unsigned) time(NULL));
-        ID = rand();  
-
-        //Chack if ID is unique
+        ID = rand();
         Findet = true;
-        for(int Count = 0; Count < SubWindows.size(); Count++)
-        { 
-            if(SubWindows[Count]->ID == ID) Findet = false;
-        }
+        for(int Count = 0; Count < SubWindows.size(); Count++) if(SubWindows[Count]->ID == ID) Findet = false;
         if(!SubWindows.size()) Findet = true;
-
     }
     
-    //Create New Window
     Element* NewWindow = new Element(ID, Window, Type);
     SubWindows.push_back(NewWindow);
     Log.INFO("Created New Sub Window with ID " + std::to_string(ID));
-
 }
 
 void GUI::DeleteSubWindow(const unsigned int& ID){
     Log.INFO("Removed Sub Window with ID " + std::to_string(SubWindows[ID]->ID));
     delete SubWindows[ID];
     SubWindows.erase(std::next(SubWindows.begin(), ID));
-
 }
 
 //############################## Elements ##############################//
@@ -176,7 +151,6 @@ Element::Element(const unsigned int& GetID, GLFWwindow* Window, const unsigned i
     :ID(GetID), Window(Window), Type(GetType), WindowTitle("Window " + std::to_string(ID)) {}
 
 void Element::Render(){
-    //Create Window
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
     ImGui::Begin(WindowTitle.c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar);
     //Title Bar
@@ -191,7 +165,6 @@ void Element::Render(){
         if(ImGui::MenuItem("Exit")) RenderElement = false;
     ImGui::EndMenuBar();
 
-    //Render Window Type
     switch (Type)
     {
         case 0: break; //Clear Window
@@ -208,8 +181,10 @@ void Element::Render(){
 //Elements Types
 
 void Element::LogElement(){
-    for(const std::string& Line : LOG::LogData){
-        ImGui::Text(Line.c_str());
+    for(std::pair<const ImVec4&, const std::string&> Line : LOG::LogData) {
+        ImGui::PushStyleColor(ImGuiCol_Text, Line.first);
+        ImGui::Text(Line.second.c_str());
+        ImGui::PopStyleColor();
     };
 
     if(LOG::ScrollDown){

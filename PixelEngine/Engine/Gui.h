@@ -1,25 +1,22 @@
 #pragma once
-//Libs
 #include "GLAD/glad.h"
 #include "GLFW/glfw3.h"
 #include <vector>
+#include <utility>
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
-//Programs
 #include "LOG.h"
 #include "Data/Data.h"
 
-//############################## GUI ##############################//
+//// GUI ////////////////////////////////////////////////////
 
 class Element;
 
 class GUI
 {
-private: //Programs
+private:
     LOG Log = LOG();
-
-private: //Varibles
     GLFWwindow* Window;
     std::vector<Element*> SubWindows; 
     ImVec2 BTNSize = ImVec2(30, 30);
@@ -27,12 +24,10 @@ private: //Varibles
     const char* MaxBTN = "_";
     const char* ExitBTN = "X";
     int WindowWidth, WindowHeight;
-
-private: //Gui Events
     void CreateNewSubWindow(const unsigned int& Type = 0);
     void DeleteSubWindow(const unsigned int& ID);
 
-public: //Functions
+public: 
     bool WindowShouldClose = false;
     GUI(GLFWwindow* WindowPtr);
     void Render();
@@ -40,10 +35,10 @@ public: //Functions
 
 };
 
-//############################## Element ##############################//
+//// Element ////////////////////////////////////////////////////
 
 class Element{
-public: //Element Params
+public:
     unsigned int Type = 0;
     unsigned int ID = 0;
     bool RenderElement = true;
@@ -52,7 +47,7 @@ private:
     GLFWwindow* Window;
     std::string WindowTitle;
 
-private: //Element Type Data
+private:
     //LogElement
     LOG Log = LOG();
     //SystemElement
@@ -64,12 +59,12 @@ private: //Element Type Data
     Data::Vector Textures = Data::Vector("Textures");
     Data::Vector Materials = Data::Vector("Materials");
 
-private: //Element Types
+private:
     void LogElement();       //1
     void SystemElement();    //2
     void AssetsElement();    //3
 
-public: //Functions
+public:
     Element(const unsigned int& GetID, GLFWwindow* Window, const unsigned int& GetType = 0);
     void Render();
 

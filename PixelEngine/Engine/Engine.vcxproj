@@ -14,11 +14,13 @@
     <ClInclude Include="GraphicEngine.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="LOG.h" />
+    <ClInclude Include="PixelEngine..h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicEngine.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="LOG.cpp" />
+    <ClCompile Include="PixelEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\Dependencies.vcxproj">

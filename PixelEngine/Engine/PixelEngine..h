@@ -1,20 +1,16 @@
 #pragma once
-//Libs
 #include "GLAD/glad.h"
 #include "GLFW/glfw3.h"
-//Programs
 #include "GraphicEngine.h"
 #include "Gui.h"
 
 class PixelEngine
 {
-private: //Programs
+private:
     GraphicEngine Graphics;
-
-private: //Varibles
     GLFWwindow* Window;
 
-public: //Functions
+public:
     PixelEngine();
 
 };
