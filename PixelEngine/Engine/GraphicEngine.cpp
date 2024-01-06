@@ -1,6 +1,7 @@
 #include "GraphicEngine.h"
 
-GLFWwindow* GraphicEngine::CreateWindow()
+GraphicEngine::GraphicEngine(GLFWwindow* Window)
+    :Window(Window)
 {
     //Load Settings
     Settings WindowSettings = Settings();
@@ -37,9 +38,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
 
     //Refresh Rate
     if(WindowSettings.RefreshRate == 0) {glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
-    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(Mode->refreshRate));}
+    Log.MESSAGE("Setted Refresh Rate to " +Mode->refreshRate);}
     else{ glfwWindowHint(GLFW_REFRESH_RATE, WindowSettings.RefreshRate); 
-    Log.MESSAGE("Setted Refresh Rate to " + std::to_string(WindowSettings.RefreshRate));}
+    Log.MESSAGE("Setted Refresh Rate to " + WindowSettings.RefreshRate);}
     
     //Set Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -54,10 +55,9 @@ GLFWwindow* GraphicEngine::CreateWindow()
         WindowSettings.Width = Mode->width;
         WindowSettings.Height = Mode->height;
     }
-    Log.MESSAGE("Seted Resolution on " + std::to_string(WindowSettings.Width) + " x " + std::to_string(WindowSettings.Height));
-
+    Log.MESSAGE("Seted Resolution on " + WindowSettings.Width + char(" x " + WindowSettings.Height));
+    
     //Create Window
-    GLFWwindow* Window;
     if(WindowSettings.FullScreen)
     {
         Window = glfwCreateWindow(WindowSettings.Width, WindowSettings.Height, WindowTitle.c_str(), Monitor, NULL);
@@ -81,9 +81,10 @@ GLFWwindow* GraphicEngine::CreateWindow()
     gladLoadGL();
     glad_glViewport(0, 0, WindowSettings.Width, WindowSettings.Height);
     Log.MESSAGE("Loaded GLAD");
+}
 
-    return Window;
-    
+GraphicEngine::~GraphicEngine() {
+
 }
 
 void GraphicEngine::Events(GLFWwindow* Window){

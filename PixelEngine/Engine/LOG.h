@@ -6,13 +6,13 @@
 class LOG
 {
 public: //Varibles
-    static std::vector<std::string> LogData;
+    static std::vector<const char*> LogData;
     static bool ScrollDown;
 
 public: //Add Log
-    void WARNING(const std::string& Value); //!!!
-    void MESSAGE(const std::string& Value); //!!
-    void INFO(const std::string& Value);    //!
+    void WARNING(const char* Value); //!!!
+    void MESSAGE(const char* Value); //!!
+    void INFO(const char* Value);    //!
 
 
 };

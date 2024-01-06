@@ -9,13 +9,13 @@
 class PixelEngine
 {
 private: //Programs
-    GraphicEngine* Graphics;
+    GraphicEngine Graphics;
+    GUI UI;
 
 private: //Varibles
     GLFWwindow* Window;
 
 public: //Functions
-    PixelEngine(/* args */);
-    ~PixelEngine();
+    PixelEngine();
 
 };

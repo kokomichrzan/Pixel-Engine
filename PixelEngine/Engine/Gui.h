@@ -34,7 +34,7 @@ private: //Gui Events
 
 public: //Functions
     bool WindowShouldClose = false;
-    GUI(GLFWwindow* WindowPtr);
+    GUI(GLFWwindow* Window);
     void Render();
     ~GUI();
 
