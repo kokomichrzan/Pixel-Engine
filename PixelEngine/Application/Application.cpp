@@ -1,15 +1,15 @@
-#include "PixelEngine..h"
+#include "Application.h"
 
 //// Entry Point //////////////////////////
 
 #ifdef _DEBUG
 int main() {
-    PixelEngine App = PixelEngine();
+    PE::Application App = PE::Application();
     return 0;
 }
 #else
 int WinMain() {
-    PixelEngine App = PixelEngine();
+    PE::Application App = PE::Application();
     return 0;
 }
 #endif

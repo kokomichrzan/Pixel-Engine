@@ -11,16 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicEngine.h" />
-    <ClInclude Include="Gui.h" />
+    <ClInclude Include="Graphic\Window.h" />
+    <ClInclude Include="Graphic\Gui.h" />
     <ClInclude Include="LOG.h" />
-    <ClInclude Include="PixelEngine..h" />
+    <ClInclude Include="Application.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GraphicEngine.cpp" />
-    <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="Graphic\Window.cpp" />
+    <ClCompile Include="Graphic\Gui.cpp" />
     <ClCompile Include="LOG.cpp" />
-    <ClCompile Include="PixelEngine.cpp" />
+    <ClCompile Include="Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dependencies\Dependencies.vcxproj">

@@ -18,27 +18,27 @@
     <ClInclude Include="LOG.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicEngine.h">
+    <ClInclude Include="Graphic\Window.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Gui.h">
+    <ClInclude Include="Graphic\Gui.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="PixelEngine..h">
+    <ClInclude Include="Application.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GraphicEngine.cpp">
+    <ClCompile Include="Graphic\Window.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Gui.cpp">
+    <ClCompile Include="Graphic\Gui.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="LOG.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="PixelEngine.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
