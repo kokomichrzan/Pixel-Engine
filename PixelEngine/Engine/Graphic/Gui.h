@@ -14,16 +14,11 @@ namespace PE {
     private:
         Window *Window;
         std::vector<Element*> SubWindows;
-        const ImVec2 BTNSize = ImVec2(30, 30);
-        const char* MinBTN = "-";
-        const char* MaxBTN = "_";
-        const char* ExitBTN = "X";
         int WindowWidth, WindowHeight;
         void CreateNewSubWindow(const unsigned int& Type = 0);
         void DeleteSubWindow(const unsigned int& ID);
 
     public:
-        bool WindowShouldClose = false;
         GUI(PE::Window *Window);
         void Render();
         ~GUI();

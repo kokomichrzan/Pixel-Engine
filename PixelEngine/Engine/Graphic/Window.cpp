@@ -47,7 +47,6 @@ namespace PE {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_DECORATED, false);
 
         if (WindowSettings.FullScreen) {
             WindowSettings.Width = Mode->width;
@@ -87,113 +86,7 @@ namespace PE {
     }
 
     void Window::Events() {
-        Resize();
-        Move();
         ToggleFullscreen();
-    }
-
-    void Window::Move() {
-        //Get Positions
-        glfwGetCursorPos(HWindow, &MouseX, &MouseY);
-        glfwGetWindowPos(HWindow, &WindowLastX, &WindowLastY);
-
-        if (((MouseY < EventMoveSize && MouseY > EventResizeSize) || MoveEvent) && //Cursor on TopBar or Is Currently Moving
-            !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock) && //Is Currently not Resizing
-            !FullScreen) { //Check if is not fullscreen
-            if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) { //Is Cursor Down
-                //Get First Mouse Position
-                if (MoveGetEvent) { glfwGetCursorPos(HWindow, &MouseLastX, &MouseLastY); }
-                MoveGetEvent = false;
-                //Set Program is currently Moving
-                MoveEvent = true;
-                //Set New Window Pos
-                glfwSetWindowPos(HWindow, WindowLastX + int(MouseX - MouseLastX), WindowLastY + int(MouseY - MouseLastY));
-                //Set Cursor to last Position on App Screen
-                glfwSetCursorPos(HWindow, MouseLastX, MouseLastY);
-
-            }
-            else { MoveGetEvent = true; MoveEvent = false; }; //Set Program stops moving screen
-
-        }
-
-    }
-
-    void Window::Resize() {
-        glfwGetCursorPos(HWindow, &MouseX, &MouseY);
-        glfwGetWindowSize(HWindow, &WindowWidth, &WindowHeight);
-        glfwGetWindowPos(HWindow, &WindowLastX, &WindowLastY);
-
-        //Check if User is pressing key inside window
-        if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
-            ((MouseX >= EventResizeSize && MouseX <= WindowWidth - EventResizeSize &&
-                MouseY >= EventResizeSize && MouseY <= WindowHeight - EventResizeSize) || (MouseInSideLock)) &&
-            !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock || ResizeRightLock))
-
-            MouseInSideLock = true;
-        else MouseInSideLock = false;
-
-        if (!MoveEvent && !MouseInSideLock && !FullScreen)
-        {
-            //Left Resize
-            if (((MouseX < EventResizeSize &&
-                MouseY > 30 && (MouseY < (WindowHeight - EventResizeSize))) || ResizeLeftLock) &&
-                !(ResizeTopLock || ResizeBottomLock || ResizeRightLock)) {
-                if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                    if (ResizeGetEvent) { glfwGetCursorPos(HWindow, &MouseLastX, &MouseLastY); }
-                    ResizeGetEvent = false;
-                    ResizeLeftLock = true;
-                    if ((WindowWidth - (MouseX - MouseLastX)) >= 1000) {
-                        glfwSetWindowPos(HWindow, int(WindowLastX + (MouseX - MouseLastX)), WindowLastY);
-                        glfwSetWindowSize(HWindow, int(WindowWidth - (MouseX - MouseLastX)), WindowHeight);
-                        glfwSetCursorPos(HWindow, MouseLastX, MouseLastY);
-                    }
-                }
-                else { ResizeGetEvent = true; ResizeLeftLock = false; };
-            }
-
-            //Right Resize
-            if (((MouseX > (WindowWidth - EventResizeSize) &&
-                MouseY > 30 && (MouseY < (WindowHeight - EventResizeSize))) || ResizeRightLock) &&
-                !(ResizeTopLock || ResizeBottomLock || ResizeLeftLock)) {
-                if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                    if (ResizeGetEvent) { glfwGetCursorPos(HWindow, &MouseLastX, &MouseLastY); }
-                    ResizeGetEvent = false;
-                    ResizeRightLock = true;
-                    if (MouseX >= 1000) glfwSetWindowSize(HWindow, int(MouseX), WindowHeight);
-                }
-                else { ResizeGetEvent = true; ResizeRightLock = false; };
-            }
-
-            //Top Resize
-            if (((MouseY < EventResizeSize || ResizeTopLock)) &&
-                !(ResizeBottomLock || ResizeLeftLock || ResizeRightLock)) {
-                if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                    if (ResizeGetEvent) { glfwGetCursorPos(HWindow, &MouseLastX, &MouseLastY); }
-                    ResizeGetEvent = false;
-                    ResizeTopLock = true;
-                    if ((WindowHeight - (MouseY - MouseLastY)) >= 900) {
-                        glfwSetWindowPos(HWindow, WindowLastX, int(WindowLastY + (MouseY - MouseLastY)));
-                        glfwSetWindowSize(HWindow, WindowWidth, int(WindowHeight - (MouseY - MouseLastY)));
-                        glfwSetCursorPos(HWindow, MouseLastX, MouseLastY);
-                    }
-                }
-                else { ResizeGetEvent = true; ResizeTopLock = false; };
-            }
-
-            //Bottom Resize
-            if ((MouseY > (WindowHeight - EventResizeSize) || ResizeBottomLock) &&
-                !(ResizeTopLock || ResizeLeftLock || ResizeRightLock)) {
-                if (glfwGetMouseButton(HWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                    if (ResizeGetEvent) { glfwGetCursorPos(HWindow, &MouseLastX, &MouseLastY); }
-                    ResizeGetEvent = false;
-                    ResizeBottomLock = true;
-                    if (MouseY >= 900) glfwSetWindowSize(HWindow, WindowWidth, int(MouseY));
-                }
-                else { ResizeGetEvent = true; ResizeBottomLock = false; };
-            }
-
-            glViewport(0, 0, WindowWidth, WindowHeight);
-        }
     }
 
     void Window::ToggleFullscreen() {

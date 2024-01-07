@@ -88,23 +88,8 @@ namespace PE {
 
         //Title
         const int LeftOffset = ImGui::CalcTextSize("File").x + ImGui::CalcTextSize("Window").x;
-        const int RightOffset = ImGui::CalcTextSize("Exit").x + ImGui::CalcTextSize("Min").x + ImGui::CalcTextSize("Max").x;
-        ImGui::SetCursorPos(ImVec2((WindowWidth - LeftOffset - RightOffset - ImGui::CalcTextSize("Pixel Engine").x) / 2 + LeftOffset, 0));
+        ImGui::SetCursorPos(ImVec2((WindowWidth - LeftOffset - ImGui::CalcTextSize("Pixel Engine").x) / 2 + LeftOffset, 0));
         ImGui::Text("Pixel Engine");
-
-        //Window Events
-        //Min
-        ImGui::SetCursorPos(ImVec2(WindowWidth - (BTNSize.x * 3) - 12, 0));
-        if (ImGui::Button(MinBTN, BTNSize)) { glfwIconifyWindow(Window->HWindow); };
-        //Max
-        ImGui::SetCursorPos(ImVec2(WindowWidth - (BTNSize.x * 2) - 8, 0));
-        if (ImGui::Button(MaxBTN, BTNSize)) {
-            if (!glfwGetWindowAttrib(Window->HWindow, GLFW_MAXIMIZED)) glfwMaximizeWindow(Window->HWindow);
-            else { glfwRestoreWindow(Window->HWindow); glfwSetWindowSize(Window->HWindow, 1000, 900); }
-        };
-        //Exit
-        ImGui::SetCursorPos(ImVec2(WindowWidth - BTNSize.x - 4, 0));
-        if (ImGui::Button(ExitBTN, BTNSize)) { WindowShouldClose = true; };
         ImGui::EndMainMenuBar();
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();

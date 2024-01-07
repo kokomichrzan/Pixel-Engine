@@ -8,7 +8,7 @@ namespace PE {
     {
         PE::GUI GUI = PE::GUI(Window);
 
-        while (!GUI.WindowShouldClose) {
+        while (!glfwWindowShouldClose(Window->HWindow)) {
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(.04f, 0.18f, 0.27f, 1.0f);
 
