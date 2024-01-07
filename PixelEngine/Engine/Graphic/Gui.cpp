@@ -75,6 +75,7 @@ namespace PE {
             if (ImGui::MenuItem("Open")) {};
             if (ImGui::MenuItem("Save")) {};
             if (ImGui::MenuItem("Settings")) {};
+            if (ImGui::MenuItem("Exit")) { WindowShouldClose = true; };
             ImGui::EndMenu();
         }
         //Window

@@ -19,6 +19,7 @@ namespace PE {
         void DeleteSubWindow(const unsigned int& ID);
 
     public:
+        bool WindowShouldClose = false;
         GUI(PE::Window *Window);
         void Render();
         ~GUI();
